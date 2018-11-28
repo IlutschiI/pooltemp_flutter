@@ -7,6 +7,10 @@ import 'package:pooltemp_flutter/components/card.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
 
 class TemperatureDetails extends StatelessWidget {
+  final double _startingTemp;
+
+  TemperatureDetails(this._startingTemp);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +38,7 @@ class TemperatureDetails extends StatelessWidget {
   List<Series<Temperature, DateTime>> createSampleData() {
     List<Temperature> data = List();
     final random = Random();
-    var prevTemp = 10.0;
+    var prevTemp = _startingTemp;
     var actualTemp = 0.0;
     for (int i = 0; i < 100; i++) {
       actualTemp = findRandomTemperature(random, prevTemp);
@@ -51,9 +55,9 @@ class TemperatureDetails extends StatelessWidget {
   //number can only have a differnce of +-0.5 to have nice and clean chart
   double findRandomTemperature(Random random, double prevTemp) {
     var offset = 0.5;
-    var temperature = random.nextDouble() * 50;
+    var temperature = random.nextDouble() * _startingTemp*20;
     while (temperature >= prevTemp + offset || temperature <= prevTemp - offset) {
-      temperature = random.nextDouble() * 15;
+      temperature = random.nextDouble() * _startingTemp*20;
     }
     return temperature;
   }
