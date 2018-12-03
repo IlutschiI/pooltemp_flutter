@@ -9,7 +9,7 @@ class TemperatureService {
 
   Future<List<Temperature>> findAllTemperatureForSensor(String sensor) async {
     final response =
-        await http.get("http://172.22.20.69:8000/temperature");
+        await http.get("http://mypooltemp.ddns.net:8000/temperature");
     if (response.statusCode == 200) {
       List list = json.decode(response.body);
 
