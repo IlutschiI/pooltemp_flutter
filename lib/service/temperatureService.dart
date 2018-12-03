@@ -9,7 +9,7 @@ class TemperatureService {
 
   Future<List<Temperature>> findAllTemperatureForSensor(String sensor) async {
     final response =
-        await http.get("http://mypooltemp.ddns.net:8000/temperature");
+        await http.get("http://172.22.20.69:8000/temperature");
     if (response.statusCode == 200) {
       List list = json.decode(response.body);
 
@@ -22,8 +22,12 @@ class TemperatureService {
       temps.sort((t1, t2) => t1.time.compareTo(t2.time));
 
       var result = List<Temperature>();
-      for (var i = 0; i < temps.length; i++) {
-        if (i % 100 == 0) result.add(temps.elementAt(i));
+      if(temps.length>1000) {
+        for (var i = 0; i < temps.length; i++) {
+          if (i % 100 == 0) result.add(temps.elementAt(i));
+        }
+      } else{
+        result.addAll(temps);
       }
 
       return result;
