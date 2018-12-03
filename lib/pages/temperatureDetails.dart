@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:pooltemp_flutter/components/lineGraphCard.dart';
 import 'package:pooltemp_flutter/converter/temperatureSeriesConverter.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
+import 'package:pooltemp_flutter/sample/temperatureSampleData.dart';
 import 'package:pooltemp_flutter/service/temperatureService.dart';
 
 class TemperatureDetails extends StatelessWidget {
@@ -39,38 +40,9 @@ class TemperatureDetails extends StatelessWidget {
     try {
       temps = await TemperatureService().findAllTemperatureForSensor(_sensorId);
     } catch (e) {
-      temps = createSampleData();
+      temps = TemperatureSampleData().createSampleData(_startingTemp);
     }
-    return convertIntoSeries(temps);
+    return TemperatureSeriesConverter().convert(temps);
   }
 
-  //This is just for demo purpose; replace this with loading actual Data
-  List<Temperature> createSampleData() {
-    List<Temperature> data = List();
-    final random = Random();
-    var prevTemp = _startingTemp;
-    var actualTemp = 0.0;
-    for (int i = 0; i < 100; i++) {
-      actualTemp = findRandomTemperature(random, prevTemp);
-      prevTemp = actualTemp;
-      data.add(Temperature(time: DateTime.now().subtract(Duration(hours: i)), temperature: actualTemp));
-    }
-
-    return data;
-  }
-
-  //finding next "random" number
-  //number can only have a differnce of +-0.5 to have nice and clean chart
-  double findRandomTemperature(Random random, double prevTemp) {
-    var offset = 0.5;
-    var temperature = random.nextDouble() * _startingTemp * 20;
-    while (temperature >= prevTemp + offset || temperature <= prevTemp - offset) {
-      temperature = random.nextDouble() * _startingTemp * 20;
-    }
-    return temperature;
-  }
-
-  List<Series<Temperature, DateTime>> convertIntoSeries(List<Temperature> value) {
-    return new TemperatureSeriesConverter().convert(value);
-  }
 }
