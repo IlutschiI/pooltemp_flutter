@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:pooltemp_flutter/components/lineGraphCard.dart';
+import 'package:pooltemp_flutter/converter/temperatureSeriesConverter.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
 import 'package:pooltemp_flutter/service/temperatureService.dart';
 
@@ -36,10 +37,9 @@ class TemperatureDetails extends StatelessWidget {
   Future<List<Series<Temperature, DateTime>>> loadData() async {
     List<Temperature> temps;
     try {
-      temps = await TemperatureService()
-          .findAllTemperatureForSensor(_sensorId);
-    }catch(e){
-      temps=createSampleData();
+      temps = await TemperatureService().findAllTemperatureForSensor(_sensorId);
+    } catch (e) {
+      temps = createSampleData();
     }
     return convertIntoSeries(temps);
   }
@@ -53,9 +53,7 @@ class TemperatureDetails extends StatelessWidget {
     for (int i = 0; i < 100; i++) {
       actualTemp = findRandomTemperature(random, prevTemp);
       prevTemp = actualTemp;
-      data.add(Temperature(
-          time: DateTime.now().subtract(Duration(hours: i)),
-          temperature: actualTemp));
+      data.add(Temperature(time: DateTime.now().subtract(Duration(hours: i)), temperature: actualTemp));
     }
 
     return data;
@@ -66,21 +64,13 @@ class TemperatureDetails extends StatelessWidget {
   double findRandomTemperature(Random random, double prevTemp) {
     var offset = 0.5;
     var temperature = random.nextDouble() * _startingTemp * 20;
-    while (
-        temperature >= prevTemp + offset || temperature <= prevTemp - offset) {
+    while (temperature >= prevTemp + offset || temperature <= prevTemp - offset) {
       temperature = random.nextDouble() * _startingTemp * 20;
     }
     return temperature;
   }
 
-  Future<List<Series<Temperature, DateTime>>> convertIntoSeries(
-      List<Temperature> value) async{
-    return [
-      new Series(
-          id: "temp",
-          data: value,
-          domainFn: (Temperature temp, _) => temp.time,
-          measureFn: (Temperature temperature, _) => temperature.temperature)
-    ];
+  List<Series<Temperature, DateTime>> convertIntoSeries(List<Temperature> value) {
+    return new TemperatureSeriesConverter().convert(value);
   }
 }
