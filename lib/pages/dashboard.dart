@@ -16,7 +16,7 @@ class _DashBoardState extends State<DashBoard> {
   @override
   void initState() {
     _temperatures.add(new Temperature(sensorID: "28-80000026d871", temperature: 12.0));
-    _temperatures.add(new Temperature(sensorID: "4A3-097-F3BC", temperature: 23.0));
+    _temperatures.add(new Temperature(sensorID: "28-0316a34e6dff", temperature: 23.0));
   }
 
   void relaod(){
