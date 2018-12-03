@@ -14,28 +14,36 @@ class _DashBoardState extends State<DashBoard> {
   List<Temperature> _temperatures = new List();
   TemperatureService _service = TemperatureService();
 
+  bool _isloading = false;
+
   @override
   void initState() {
-    loadTemperatureForSensors();
+    loadTemperatureForSensors().then((list){
+      _temperatures=list;
+    });
   }
 
-  void loadTemperatureForSensors() {
-    _temperatures.clear();
-    _service.findActualTemperatureForSensor("28-80000026d871\n").then((temperature) {
-      setState(() {
-        _temperatures.add(temperature);
-      });
-    });
+  Future<List<Temperature>> loadTemperatureForSensors() async {
+    List<Temperature> list = List();
 
-    _service.findActualTemperatureForSensor("28-0316a34e6dff\n").then((temperature) {
-      setState(() {
-        _temperatures.add(temperature);
-      });
-    });
+    list.add(await _service.findActualTemperatureForSensor("28-80000026d871\n"));
+    list.add(await _service.findActualTemperatureForSensor("28-0316a34e6dff\n"));
+    return list;
   }
 
   void relaod() {
-    loadTemperatureForSensors();
+    setState(() {
+      _isloading = true;
+    });
+
+    loadTemperatureForSensors().then((list){
+      setState(() {
+        _temperatures = list;
+        _isloading = false;
+      });
+    });
+
+    //loadTemperatureForSensors();
   }
 
   void navigateToDetails(BuildContext context, Temperature temperature) {
@@ -72,20 +80,45 @@ class _DashBoardState extends State<DashBoard> {
         elevation: 2.0,
       ),
       body: new Material(
-        color: Colors.blueAccent,
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: _temperatures
-              .map((t) => Container(
-                    child: InkWell(
-                      child: TemperatureCard(t),
-                      onTap: () => navigateToDetails(context, t),
-                    ),
-                    margin: EdgeInsets.only(top: 5),
-                  ))
-              .toList(),
-        ),
-      ),
+          color: Colors.blueAccent,
+          child: Stack(
+            children: buildChildren(context),
+          )),
     );
+  }
+
+  List<Widget> buildChildren(BuildContext context) {
+    var childrens = <Widget>[
+      new Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: _temperatures
+            .map((t) => Container(
+                  child: InkWell(
+                    child: TemperatureCard(t),
+                    onTap: () => navigateToDetails(context, t),
+                  ),
+                  margin: EdgeInsets.only(top: 5),
+                ))
+            .toList(),
+      ),
+    ];
+
+    if(_isloading){
+      childrens.add(Stack(
+        children: <Widget>[
+          Opacity(
+              opacity: 0.5,
+              child: ModalBarrier(
+                dismissible: false,
+                color: Colors.black,
+              )),
+          Center(
+            child: CircularProgressIndicator(),
+          )
+        ],
+      ));
+    }
+
+    return childrens;
   }
 }
