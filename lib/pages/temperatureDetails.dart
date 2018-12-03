@@ -1,18 +1,17 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart';
-import 'package:pooltemp_flutter/components/card.dart';
-
+import 'package:flutter/material.dart';
+import 'package:pooltemp_flutter/components/lineGraphCard.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
 import 'package:pooltemp_flutter/service/temperatureService.dart';
 
 class TemperatureDetails extends StatelessWidget {
   final double _startingTemp;
+  final String _sensorId;
 
-  TemperatureDetails(this._startingTemp);
+  TemperatureDetails(this._startingTemp, this._sensorId);
 
   @override
   Widget build(BuildContext context) {
@@ -24,18 +23,7 @@ class TemperatureDetails extends StatelessWidget {
               future: loadData(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
-                  return CustomCard(
-                      child: Container(
-                    height: 300,
-                    width: double.infinity,
-                    padding: EdgeInsets.all(10),
-                    //maybe replace this Chart with a selfmade widget, which uses this chart
-                    child: TimeSeriesChart(
-                      snapshot.data,
-                      dateTimeFactory: LocalDateTimeFactory(),
-                      animate: false,
-                    ),
-                  ));
+                  return LineGraphCard(snapshot.data);
                 } else {
                   return Text("loading data...");
                 }
@@ -49,7 +37,7 @@ class TemperatureDetails extends StatelessWidget {
     List<Temperature> temps;
     try {
       temps = await TemperatureService()
-          .findAllTemperatureForSensor("28-80000026d871");
+          .findAllTemperatureForSensor(_sensorId);
     }catch(e){
       temps=createSampleData();
     }

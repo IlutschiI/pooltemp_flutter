@@ -15,7 +15,7 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   void initState() {
-    _temperatures.add(new Temperature(sensorID: "000-212-34BD", temperature: 12.0));
+    _temperatures.add(new Temperature(sensorID: "28-80000026d871", temperature: 12.0));
     _temperatures.add(new Temperature(sensorID: "4A3-097-F3BC", temperature: 23.0));
   }
 
@@ -26,13 +26,13 @@ class _DashBoardState extends State<DashBoard> {
     });
   }
 
-  void navigateToDetails(BuildContext context, double temperature){
+  void navigateToDetails(BuildContext context, Temperature temperature){
    // Navigator.push(context, MaterialPageRoute(builder: (context) => TemperatureDetails(),));
 
 
     //this is a navigation with a simple slide transition the one above works just fine, but has no transition
     Navigator.push(context, PageRouteBuilder(pageBuilder: (context,Animation<double> animation,Animation<double>secondaryAnimation){
-      return TemperatureDetails(temperature);
+      return TemperatureDetails(temperature.temperature, temperature.sensorID);
     },
     transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child){
       return SlideTransition(
@@ -64,7 +64,7 @@ class _DashBoardState extends State<DashBoard> {
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: _temperatures.map((t)=>Container(
-            child:InkWell(child: TemperatureCard(t),onTap:() => navigateToDetails(context, t.temperature),),
+            child:InkWell(child: TemperatureCard(t),onTap:() => navigateToDetails(context, t),),
             margin: EdgeInsets.only(top: 5),
           )).toList(),
         ),
