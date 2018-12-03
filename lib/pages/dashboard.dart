@@ -21,13 +21,13 @@ class _DashBoardState extends State<DashBoard> {
 
   void loadTemperatureForSensors() {
     _temperatures.clear();
-    _service.findActualTemperatureForSensor("28-80000026d871").then((temperature) {
+    _service.findActualTemperatureForSensor("28-80000026d871\n").then((temperature) {
       setState(() {
         _temperatures.add(temperature);
       });
     });
 
-    _service.findActualTemperatureForSensor("28-0316a34e6dff").then((temperature) {
+    _service.findActualTemperatureForSensor("28-0316a34e6dff\n").then((temperature) {
       setState(() {
         _temperatures.add(temperature);
       });

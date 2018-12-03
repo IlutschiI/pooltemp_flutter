@@ -4,7 +4,10 @@ import 'package:pooltemp_flutter/model/temperature.dart';
 
 class TemperatureService {
   Future<Temperature> findActualTemperatureForSensor(String sensor) async {
-    return findAllTemperatureForSensor(sensor).then((values) => values.last);
+
+    final response =
+    await http.get("http://mypooltemp.ddns.net:8000/temperature/latest?sensor="+sensor);
+    return Temperature.fromJson(json.decode(response.body));
   }
 
   Future<List<Temperature>> findAllTemperatureForSensor(String sensor) async {
@@ -17,7 +20,7 @@ class TemperatureService {
       for (var temperature in list) {
         temps.add(Temperature.fromJson(temperature));
       }
-      temps = temps.where((temp) => temp.sensorID.trim() == sensor).toList();
+      temps = temps.where((temp) => temp.sensorID == sensor).toList();
       temps.removeWhere((t) => t.temperature == 0.0 || t.temperature == 85.0);
       temps.sort((t1, t2) => t1.time.compareTo(t2.time));
 
