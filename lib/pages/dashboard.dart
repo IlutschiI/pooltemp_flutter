@@ -14,12 +14,15 @@ class _DashBoardState extends State<DashBoard> {
   List<Temperature> _temperatures = new List();
   TemperatureService _service = TemperatureService();
 
-  bool _isloading = false;
+  bool _isloading = true;
 
   @override
   void initState() {
     loadTemperatureForSensors().then((list){
-      _temperatures=list;
+      setState(() {
+        _temperatures=list;
+        _isloading=false;
+      });
     });
   }
 
