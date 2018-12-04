@@ -3,6 +3,7 @@ import 'package:pooltemp_flutter/components/card.dart';
 import 'package:pooltemp_flutter/components/temperatureCard.dart';
 import 'package:pooltemp_flutter/model/sensor.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
+import 'package:pooltemp_flutter/navigator/navigator.dart';
 import 'package:pooltemp_flutter/pages/temperatureDetails.dart';
 import 'package:pooltemp_flutter/service/sensorService.dart';
 import 'package:pooltemp_flutter/service/temperatureService.dart';
@@ -56,28 +57,7 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   void navigateToDetails(BuildContext context, Temperature temperature) {
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => TemperatureDetails(),));
-
-    //this is a navigation with a simple slide transition the one above works just fine, but has no transition
-    Navigator.push(
-        context,
-        PageRouteBuilder(pageBuilder: (context, Animation<double> animation, Animation<double> secondaryAnimation) {
-          return TemperatureDetails(temperature.temperature, temperature.sensorID);
-        }, transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
-          return SlideTransition(
-            position: new Tween<Offset>(
-              begin: const Offset(1.0, 0.0),
-              end: Offset.zero,
-            ).animate(animation),
-            child: new SlideTransition(
-              position: new Tween<Offset>(
-                begin: Offset.zero,
-                end: const Offset(1.0, 0.0),
-              ).animate(secondaryAnimation),
-              child: child,
-            ),
-          );
-        }));
+    CustomNavigator().navigateTo(context, TemperatureDetails(temperature.temperature, temperature.sensorID));
   }
 
   @override
