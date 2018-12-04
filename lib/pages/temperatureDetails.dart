@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:pooltemp_flutter/components/lineGraphCard.dart';
+import 'package:pooltemp_flutter/components/loadingOverlay.dart';
 import 'package:pooltemp_flutter/converter/temperatureSeriesConverter.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
 import 'package:pooltemp_flutter/service/temperatureService.dart';
@@ -26,7 +27,7 @@ class TemperatureDetails extends StatelessWidget {
                 if (snapshot.hasData) {
                   return LineGraphCard(snapshot.data);
                 } else {
-                  return Text("loading data...");
+                  return Center(child: CircularProgressIndicator(),);
                 }
               }),
         ],
