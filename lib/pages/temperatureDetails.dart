@@ -10,10 +10,9 @@ import 'package:pooltemp_flutter/model/temperature.dart';
 import 'package:pooltemp_flutter/service/temperatureService.dart';
 
 class TemperatureDetails extends StatelessWidget {
-  final double _startingTemp;
   final String _sensorId;
 
-  TemperatureDetails(this._startingTemp, this._sensorId);
+  TemperatureDetails(this._sensorId);
 
   @override
   Widget build(BuildContext context) {

@@ -56,7 +56,7 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   void navigateToDetails(BuildContext context, Temperature temperature) {
-    CustomNavigator().navigateTo(context, TemperatureDetails(temperature.temperature, temperature.sensorID));
+    CustomNavigator().navigateTo(context, TemperatureDetails(temperature.sensorID));
   }
 
   @override
