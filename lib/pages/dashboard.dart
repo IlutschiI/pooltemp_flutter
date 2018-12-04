@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pooltemp_flutter/components/card.dart';
+import 'package:pooltemp_flutter/components/loadingOverlay.dart';
 import 'package:pooltemp_flutter/components/temperatureCard.dart';
 import 'package:pooltemp_flutter/model/sensor.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
@@ -91,19 +92,7 @@ class _DashBoardState extends State<DashBoard> {
     ];
 
     if (_isLoading) {
-      childrens.add(Stack(
-        children: <Widget>[
-          Opacity(
-              opacity: 0.5,
-              child: ModalBarrier(
-                dismissible: false,
-                color: Colors.black,
-              )),
-          Center(
-            child: CircularProgressIndicator(),
-          )
-        ],
-      ));
+      childrens.add(LoadingOverlay());
     }
 
     return childrens;
