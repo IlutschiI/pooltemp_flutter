@@ -82,7 +82,7 @@ class _DashBoardState extends State<DashBoard> {
         children: _temperatures
             .map((t) => Container(
                   child: InkWell(
-                    child: TemperatureCard(t),
+                    child: TemperatureCard(t,_sensors.firstWhere((s)=>s.id==t.sensorID)),
                     onTap: () => navigateToDetails(context, t),
                   ),
                   margin: EdgeInsets.only(top: 5),

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pooltemp_flutter/components/card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pooltemp_flutter/model/sensor.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
 
 class TemperatureCard extends StatelessWidget {
   final Temperature _temperature;
 
-  TemperatureCard(this._temperature);
+  final Sensor _sensor;
+
+  TemperatureCard(this._temperature, this._sensor);
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +41,7 @@ class TemperatureCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Text(
-                _temperature.sensorID,
+              Text(_sensor.name!=null?_sensor.name.trim():_sensor.id.trim(),
                 style: TextStyle(color: Colors.grey),
               ),
               Container(
