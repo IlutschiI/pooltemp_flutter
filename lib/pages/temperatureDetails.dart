@@ -19,7 +19,7 @@ class TemperatureDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           FutureBuilder(
               future: loadGraph(),
@@ -32,13 +32,29 @@ class TemperatureDetails extends StatelessWidget {
                   );
                 }
               }),
-              FutureBuilder(
-                  future: loadHighestTemperature(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData) {
-                      Temperature t = snapshot.data;
-                      return CustomCard(
-                          child: Container(
+          buildDetailRow(),
+          CustomCard(
+            margin: EdgeInsets.only(left: 20, right: 20, top: 10),
+            child: Text("das ist ein text"),
+          )
+        ],
+      ),
+    );
+  }
+
+  Row buildDetailRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        FutureBuilder(
+            future: loadHighestTemperature(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                Temperature t = snapshot.data;
+                return Expanded(
+                  child: CustomCard(
+                      margin: EdgeInsets.only(left: 20, right: 4, top: 10),
+                      child: Container(
                         margin: EdgeInsets.only(top: 10, bottom: 10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -53,18 +69,46 @@ class TemperatureDetails extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ));
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  }),
-          CustomCard(
-            child: Text("das ist ein text"),
-          )
-        ],
-      ),
+                      )),
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }),
+        FutureBuilder(
+            future: loadLowestTemperature(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                Temperature t = snapshot.data;
+                return Expanded(
+                  child: CustomCard(
+                      margin: EdgeInsets.only(left: 4, right: 20, top: 10),
+                      child: Container(
+                        margin: EdgeInsets.only(top: 10, bottom: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "${t.temperature}",
+                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "Lowest Temperature",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      )),
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }),
+      ],
     );
   }
 
@@ -76,5 +120,9 @@ class TemperatureDetails extends StatelessWidget {
 
   Future<Temperature> loadHighestTemperature() async {
     return await TemperatureService().findHighestTemperatureForSensor(_sensorId);
+  }
+
+  Future<Temperature> loadLowestTemperature() async {
+    return await TemperatureService().findLowestTemperatureForSensor(_sensorId);
   }
 }
