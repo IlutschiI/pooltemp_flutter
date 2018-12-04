@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pooltemp_flutter/components/card.dart';
 import 'package:pooltemp_flutter/components/temperatureCard.dart';
+import 'package:pooltemp_flutter/model/sensor.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
 import 'package:pooltemp_flutter/pages/temperatureDetails.dart';
+import 'package:pooltemp_flutter/service/sensorService.dart';
 import 'package:pooltemp_flutter/service/temperatureService.dart';
 
 class DashBoard extends StatefulWidget {
@@ -11,6 +13,7 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
+  List<Sensor> _sensors = new List();
   List<Temperature> _temperatures = new List();
   TemperatureService _service = TemperatureService();
 
@@ -18,19 +21,27 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   void initState() {
-    loadTemperatureForSensors().then((list){
-      setState(() {
-        _temperatures=list;
-        _isloading=false;
+    loadSensors().then((sensors) {
+      _sensors = sensors;
+      loadTemperatureForSensors().then((list) {
+        setState(() {
+          _temperatures = list;
+          _isloading = false;
+        });
       });
     });
+  }
+
+  Future<List<Sensor>> loadSensors() async {
+    return await SensorService().findSensorIds();
   }
 
   Future<List<Temperature>> loadTemperatureForSensors() async {
     List<Temperature> list = List();
 
-    list.add(await _service.findActualTemperatureForSensor("28-80000026d871\n"));
-    list.add(await _service.findActualTemperatureForSensor("28-0316a34e6dff\n"));
+    for (Sensor sensor in _sensors) {
+      list.add(await _service.findActualTemperatureForSensor(sensor.id));
+    }
     return list;
   }
 
@@ -39,10 +50,13 @@ class _DashBoardState extends State<DashBoard> {
       _isloading = true;
     });
 
-    loadTemperatureForSensors().then((list){
-      setState(() {
-        _temperatures = list;
-        _isloading = false;
+    loadSensors().then((sensors) {
+      _sensors = sensors;
+      loadTemperatureForSensors().then((list) {
+        setState(() {
+          _temperatures = list;
+          _isloading = false;
+        });
       });
     });
 
@@ -106,7 +120,7 @@ class _DashBoardState extends State<DashBoard> {
       ),
     ];
 
-    if(_isloading){
+    if (_isloading) {
       childrens.add(Stack(
         children: <Widget>[
           Opacity(

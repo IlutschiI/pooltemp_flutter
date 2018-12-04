@@ -1,18 +1,19 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pooltemp_flutter/model/temperature.dart';
+import 'package:pooltemp_flutter/service/baseUrl.dart';
 
 class TemperatureService {
   Future<Temperature> findActualTemperatureForSensor(String sensor) async {
 
     final response =
-    await http.get("http://mypooltemp.ddns.net:8000/temperature/latest?sensor="+sensor);
+    await http.get(BaseUrl.baseURL+"/temperature/latest?sensor="+sensor);
     return Temperature.fromJson(json.decode(response.body));
   }
 
   Future<List<Temperature>> findAllTemperatureForSensor(String sensor) async {
     final response =
-        await http.get("http://mypooltemp.ddns.net:8000/temperature");
+        await http.get(BaseUrl.baseURL+"/temperature");
     if (response.statusCode == 200) {
       List list = json.decode(response.body);
 
