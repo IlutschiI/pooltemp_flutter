@@ -19,7 +19,7 @@ class LineGraphCard extends StatelessWidget{
     return CustomCard(
         child: Container(
           height: 300,
-          width: double.infinity,
+          width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.all(10),
           //maybe replace this Chart with a selfmade widget, which uses this chart
           child: TimeSeriesChart(

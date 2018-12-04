@@ -11,6 +11,13 @@ class TemperatureService {
     return Temperature.fromJson(json.decode(response.body));
   }
 
+  Future<Temperature> findHighestTemperatureForSensor(String sensor) async {
+
+  var list = await findAllTemperatureForSensor(sensor);
+  list.sort((temp1,temp2)=>temp1.temperature.compareTo(temp2.temperature));
+  return list.last;
+  }
+
   Future<List<Temperature>> findAllTemperatureForSensor(String sensor) async {
     final response =
         await http.get(BaseUrl.baseURL+"/temperature?sensor="+sensor);
