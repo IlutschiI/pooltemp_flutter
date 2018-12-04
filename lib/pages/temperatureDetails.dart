@@ -28,7 +28,14 @@ class TemperatureDetails extends StatelessWidget {
                   return LineGraphCard(snapshot.data);
                 } else {
                   return Center(
-                    child: CircularProgressIndicator(),
+                    child:CustomCard(
+                        child: Container(
+                          height: 300,
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(10),
+                          //maybe replace this Chart with a selfmade widget, which uses this chart
+                          child: Center(child: CircularProgressIndicator()),
+                        )),
                   );
                 }
               }),
@@ -46,68 +53,70 @@ class TemperatureDetails extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        FutureBuilder(
-            future: loadHighestTemperature(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                Temperature t = snapshot.data;
-                return Expanded(
-                  child: CustomCard(
-                      margin: EdgeInsets.only(left: 20, right: 4, top: 10),
-                      child: Container(
-                        margin: EdgeInsets.only(top: 10, bottom: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              "${t.temperature}",
-                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "Highest Temperature",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      )),
-                );
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            }),
-        FutureBuilder(
-            future: loadLowestTemperature(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                Temperature t = snapshot.data;
-                return Expanded(
-                  child: CustomCard(
-                      margin: EdgeInsets.only(left: 4, right: 20, top: 10),
-                      child: Container(
-                        margin: EdgeInsets.only(top: 10, bottom: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              "${t.temperature}",
-                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "Lowest Temperature",
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      )),
-                );
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            }),
+        Expanded(
+          child: CustomCard(
+            margin: EdgeInsets.only(left: 20, right: 4, top: 10),
+            child: Container(
+              margin: EdgeInsets.only(top: 10, bottom: 10),
+              child: FutureBuilder(
+                  future: loadHighestTemperature(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      Temperature t = snapshot.data;
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "${t.temperature}",
+                            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "Highest Temperature",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Center(
+                        child: Container(margin: EdgeInsets.only(top: 4, bottom: 4), child: CircularProgressIndicator()),
+                      );
+                    }
+                  }),
+            ),
+          ),
+        ),
+        Expanded(
+          child: CustomCard(
+            margin: EdgeInsets.only(left: 4, right: 20, top: 10),
+            child: Container(
+              margin: EdgeInsets.only(top: 10, bottom: 10),
+              child: FutureBuilder(
+                  future: loadLowestTemperature(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      Temperature t = snapshot.data;
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "${t.temperature}",
+                            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "Lowest Temperature",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Center(
+                        child: Container(margin: EdgeInsets.only(top: 4, bottom: 4), child: CircularProgressIndicator()),
+                      );
+                    }
+                  }),
+            ),
+          ),
+        ),
       ],
     );
   }
