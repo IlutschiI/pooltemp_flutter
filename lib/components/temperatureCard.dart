@@ -14,38 +14,43 @@ class TemperatureCard extends StatelessWidget {
         child: new Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "${_temperature.temperature} °C",
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 10),
-              child: Icon(
-                FontAwesomeIcons.thermometerHalf,
-                color: Colors.black,
+        Container(
+          margin: EdgeInsets.only(top: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "${_temperature.temperature.toStringAsFixed(2)} °C",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
-            )
-          ],
+              Container(
+                child: Icon(
+                  FontAwesomeIcons.thermometerHalf,
+                  color: Colors.black,
+                ),
+              )
+            ],
+          ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Text(
-              _temperature.sensorID,
-              style: TextStyle(color: Colors.grey),
-            ),
-            Container(
-              child: Icon(
-                Icons.wifi_tethering,
-                color: Colors.grey,
+        Container(
+          margin: EdgeInsets.only(bottom: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Text(
+                _temperature.sensorID,
+                style: TextStyle(color: Colors.grey),
               ),
-              margin: EdgeInsets.only(left: 5, bottom: 10),
-            )
-          ],
+              Container(
+                child: Icon(
+                  Icons.wifi_tethering,
+                  color: Colors.grey,
+                ),
+                margin: EdgeInsets.only(left: 5),
+              )
+            ],
+          ),
         )
       ],
     ));
