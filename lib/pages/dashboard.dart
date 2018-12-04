@@ -18,7 +18,7 @@ class _DashBoardState extends State<DashBoard> {
   List<Temperature> _temperatures = new List();
   TemperatureService _service = TemperatureService();
 
-  bool _isloading = true;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _DashBoardState extends State<DashBoard> {
       loadTemperatureForSensors().then((list) {
         setState(() {
           _temperatures = list;
-          _isloading = false;
+          _isLoading = false;
         });
       });
     });
@@ -48,12 +48,10 @@ class _DashBoardState extends State<DashBoard> {
 
   void relaod() {
     setState(() {
-      _isloading = true;
+      _isLoading = true;
     });
 
     loadData();
-
-    //loadTemperatureForSensors();
   }
 
   void navigateToDetails(BuildContext context, Temperature temperature) {
@@ -92,7 +90,7 @@ class _DashBoardState extends State<DashBoard> {
       ),
     ];
 
-    if (_isloading) {
+    if (_isLoading) {
       childrens.add(Stack(
         children: <Widget>[
           Opacity(
