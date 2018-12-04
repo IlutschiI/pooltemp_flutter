@@ -13,7 +13,7 @@ class TemperatureService {
 
   Future<List<Temperature>> findAllTemperatureForSensor(String sensor) async {
     final response =
-        await http.get(BaseUrl.baseURL+"/temperature");
+        await http.get(BaseUrl.baseURL+"/temperature?sensor="+sensor);
     if (response.statusCode == 200) {
       List list = json.decode(response.body);
 
@@ -21,8 +21,6 @@ class TemperatureService {
       for (var temperature in list) {
         temps.add(Temperature.fromJson(temperature));
       }
-      temps = temps.where((temp) => temp.sensorID == sensor).toList();
-      temps.removeWhere((t) => t.temperature == 0.0 || t.temperature == 85.0);
       temps.sort((t1, t2) => t1.time.compareTo(t2.time));
 
       var result = List<Temperature>();
