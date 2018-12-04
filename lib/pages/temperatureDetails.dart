@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:pooltemp_flutter/components/lineGraphCard.dart';
 import 'package:pooltemp_flutter/converter/temperatureSeriesConverter.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
-import 'package:pooltemp_flutter/sample/temperatureSampleData.dart';
 import 'package:pooltemp_flutter/service/temperatureService.dart';
 
 class TemperatureDetails extends StatelessWidget {
@@ -37,12 +36,7 @@ class TemperatureDetails extends StatelessWidget {
 
   Future<List<Series<Temperature, DateTime>>> loadData() async {
     List<Temperature> temps;
-    try {
-      temps = await TemperatureService().findAllTemperatureForSensor(_sensorId);
-    } catch (e) {
-      temps = TemperatureSampleData().createSampleData(_startingTemp);
-    }
+    temps = await TemperatureService().findAllTemperatureForSensor(_sensorId);
     return TemperatureSeriesConverter().convert(temps);
   }
-
 }
