@@ -21,7 +21,11 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   void initState() {
-    loadSensors().then((sensors) {
+    loadData();
+  }
+
+  void loadData() {
+    SensorService().findSensorIds().then((sensors) {
       _sensors = sensors;
       loadTemperatureForSensors().then((list) {
         setState(() {
@@ -30,10 +34,6 @@ class _DashBoardState extends State<DashBoard> {
         });
       });
     });
-  }
-
-  Future<List<Sensor>> loadSensors() async {
-    return await SensorService().findSensorIds();
   }
 
   Future<List<Temperature>> loadTemperatureForSensors() async {
@@ -50,15 +50,7 @@ class _DashBoardState extends State<DashBoard> {
       _isloading = true;
     });
 
-    loadSensors().then((sensors) {
-      _sensors = sensors;
-      loadTemperatureForSensors().then((list) {
-        setState(() {
-          _temperatures = list;
-          _isloading = false;
-        });
-      });
-    });
+    loadData();
 
     //loadTemperatureForSensors();
   }
