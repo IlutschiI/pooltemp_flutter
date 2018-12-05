@@ -18,8 +18,7 @@ class TemperatureDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(child: Container(), preferredSize: Size.fromHeight(10)),
-      body: SingleChildScrollView(
+      body: SingleChildScrollView(padding: EdgeInsets.only(top: 30,bottom: 15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
