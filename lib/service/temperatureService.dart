@@ -33,13 +33,7 @@ class TemperatureService {
       temps.sort((t1, t2) => t1.time.compareTo(t2.time));
 
       var result = List<Temperature>();
-      if (temps.length > 1000) {
-        for (var i = 0; i < temps.length; i++) {
-          if (i % 100 == 0) result.add(temps.elementAt(i));
-        }
-      } else {
-        result.addAll(temps);
-      }
+      result.addAll(temps);
 
       return result;
     } else {
