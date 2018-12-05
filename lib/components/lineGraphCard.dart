@@ -119,13 +119,24 @@ class _LineGraphCardState extends State<LineGraphCard> {
   Future<List<Temperature>> downsizeList(List<Temperature> temps, DateTime startDate, DateTime endDate) {
     return new Future(() {
       var list=temps;
+      var result=new List<Temperature>();
       if(startDate!=null){
         list=list.where((t) => t.time.isAfter(startDate)).toList();
       }
       if(endDate!=null){
         list=list.where((t) => t.time.isBefore(endDate)).toList();
       }
-      return list;
+      if(list.length>1000){
+        for(int i=0;i<list.length;i++){
+          if(i%100==0){
+            result.add(list[i]);
+          }
+        }
+      }
+      else{
+        result=list;
+      }
+      return result;
     });
   }
 }
