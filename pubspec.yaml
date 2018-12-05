@@ -13,6 +13,7 @@ environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
 
 dependencies:
+  datetime_picker_formfield: ^0.1.7
   charts_flutter: ^0.5.0
   font_awesome_flutter: 8.2.0
   http: ^0.12.0

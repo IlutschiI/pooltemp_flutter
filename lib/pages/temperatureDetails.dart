@@ -18,33 +18,36 @@ class TemperatureDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          FutureBuilder(
-              future: loadGraph(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  return LineGraphCard(snapshot.data);
-                } else {
-                  return Center(
-                    child:CustomCard(
-                        child: Container(
-                          height: 300,
-                          width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.all(10),
-                          //maybe replace this Chart with a selfmade widget, which uses this chart
-                          child: Center(child: CircularProgressIndicator()),
-                        )),
-                  );
-                }
-              }),
-          buildDetailRow(),
-          CustomCard(
-            margin: EdgeInsets.only(left: 20, right: 20, top: 10),
-            child: Text("das ist ein text"),
-          )
-        ],
+      appBar: PreferredSize(child: Container(), preferredSize: Size.fromHeight(10)),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            FutureBuilder(
+                future: loadGraph(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return LineGraphCard(snapshot.data);
+                  } else {
+                    return Center(
+                      child:CustomCard(
+                          child: Container(
+                            height: 300,
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.all(10),
+                            //maybe replace this Chart with a selfmade widget, which uses this chart
+                            child: Center(child: CircularProgressIndicator()),
+                          )),
+                    );
+                  }
+                }),
+            buildDetailRow(),
+            CustomCard(
+              margin: EdgeInsets.only(left: 20, right: 20, top: 10),
+              child: Text("das ist ein text"),
+            )
+          ],
+        ),
       ),
     );
   }
