@@ -4,13 +4,15 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pooltemp_flutter/components/card.dart';
+import 'package:pooltemp_flutter/converter/temperatureSeriesConverter.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class LineGraphCard extends StatefulWidget {
-  List<charts.Series<Temperature, DateTime>> _series;
+  List<Temperature> _temperatures = new List();
 
-  LineGraphCard(this._series);
+
+  LineGraphCard(this._temperatures);
 
   @override
   _LineGraphCardState createState() {
@@ -19,10 +21,18 @@ class LineGraphCard extends StatefulWidget {
 }
 
 class _LineGraphCardState extends State<LineGraphCard> {
+  List<charts.Series<Temperature, DateTime>> _series = new List();
   final dateFormat = DateFormat("dd.MM.yyyy");
   Temperature _selectedTemperature;
-  DateTime _startDate = DateTime.now();
-  DateTime _endDate = DateTime.now();
+  DateTime _startDate;
+  DateTime _endDate;
+
+  @override
+  void initState() {
+    _startDate = widget._temperatures.first.time;
+    _endDate = widget._temperatures.last.time;
+    updateChart();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +47,24 @@ class _LineGraphCardState extends State<LineGraphCard> {
               Container(
                   width: 150,
                   child: DateTimePickerFormField(
+                    initialValue: _startDate,
                     format: dateFormat,
                     decoration: InputDecoration(labelText: "von"),
-                    onChanged: (d) => setState(() => _startDate = d),
+                    onChanged: (d) => setState(() {
+                          _startDate = d;
+                          updateChart();
+                        }),
                   )),
               Container(
                   width: 150,
                   child: DateTimePickerFormField(
+                    initialDate: _endDate,
                     format: dateFormat,
-                    decoration: InputDecoration(labelText: "von"),
-                    onChanged: (d) => setState(() => _endDate = d),
+                    decoration: InputDecoration(labelText: "bis"),
+                    onChanged: (d) => setState(() {
+                          _endDate = d;
+                          updateChart();
+                        }),
                   )),
             ],
           ),
@@ -56,14 +74,14 @@ class _LineGraphCardState extends State<LineGraphCard> {
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.all(10),
           //maybe replace this Chart with a selfmade widget, which uses this chart
-          child: charts.TimeSeriesChart(
-            widget._series,
+          child:_series.length!=0?charts.TimeSeriesChart(
+            _series,
             dateTimeFactory: charts.LocalDateTimeFactory(),
-            animate: false,
+            animate: true,
             selectionModels: [
               charts.SelectionModelConfig(type: charts.SelectionModelType.info, changedListener: _onSelectionChanged),
             ],
-          ),
+          ):Container(),
         ),
         Container(
           margin: EdgeInsets.only(bottom: 5),
@@ -78,6 +96,14 @@ class _LineGraphCardState extends State<LineGraphCard> {
     ));
   }
 
+  void updateChart() {
+    downsizeList(widget._temperatures, _startDate, _endDate).then((list) {
+      setState(() {
+        _series = TemperatureSeriesConverter().convert(list);
+      });
+    });
+  }
+
   _onSelectionChanged(charts.SelectionModel<DateTime> model) {
     if (model.hasAnySelection) {
       setState(() {
@@ -88,5 +114,18 @@ class _LineGraphCardState extends State<LineGraphCard> {
         _selectedTemperature = null;
       });
     }
+  }
+
+  Future<List<Temperature>> downsizeList(List<Temperature> temps, DateTime startDate, DateTime endDate) {
+    return new Future(() {
+      var list=temps;
+      if(startDate!=null){
+        list=list.where((t) => t.time.isAfter(startDate)).toList();
+      }
+      if(endDate!=null){
+        list=list.where((t) => t.time.isBefore(endDate)).toList();
+      }
+      return list;
+    });
   }
 }

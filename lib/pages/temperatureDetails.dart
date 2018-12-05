@@ -124,10 +124,8 @@ class TemperatureDetails extends StatelessWidget {
     );
   }
 
-  Future<List<Series<Temperature, DateTime>>> loadGraph() async {
-    List<Temperature> temps;
-    temps = await TemperatureService().findAllTemperatureForSensor(_sensorId);
-    return TemperatureSeriesConverter().convert(temps);
+  Future<List<Temperature>> loadGraph() async {
+    return await TemperatureService().findAllTemperatureForSensor(_sensorId);
   }
 
   Future<Temperature> loadHighestTemperature() async {
