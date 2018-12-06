@@ -47,6 +47,7 @@ class _LineGraphCardState extends State<LineGraphCard> {
               Container(
                   width: 150,
                   child: DateTimePickerFormField(
+                    editable: false,
                     initialValue: _startDate,
                     format: dateFormat,
                     decoration: InputDecoration(labelText: "von"),
@@ -58,6 +59,7 @@ class _LineGraphCardState extends State<LineGraphCard> {
               Container(
                   width: 150,
                   child: DateTimePickerFormField(
+                    editable: false,
                     initialDate: _endDate,
                     format: dateFormat,
                     decoration: InputDecoration(labelText: "bis"),
