@@ -20,6 +20,7 @@ class _DashBoardState extends State<DashBoard> {
   TemperatureService _service = TemperatureService();
 
   bool _isLoading = true;
+  bool _hasError = false;
 
   @override
   void initState() {
@@ -34,6 +35,11 @@ class _DashBoardState extends State<DashBoard> {
           _temperatures = list;
           _isLoading = false;
         });
+      });
+    }).catchError((e) {
+      setState(() {
+        _isLoading = false;
+        _hasError = true;
       });
     });
   }
@@ -50,6 +56,7 @@ class _DashBoardState extends State<DashBoard> {
   void relaod() {
     setState(() {
       _isLoading = true;
+      _hasError = false;
     });
 
     loadData();
@@ -76,23 +83,31 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   List<Widget> buildChildren(BuildContext context) {
-    var childrens = <Widget>[
-      new Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: _temperatures
-            .map((t) => Container(
-                  child: InkWell(
-                    child: TemperatureCard(t,_sensors.firstWhere((s)=>s.id==t.sensorID)),
-                    onTap: () => navigateToDetails(context, t),
-                  ),
-                  margin: EdgeInsets.only(top: 5),
-                ))
-            .toList(),
-      ),
-    ];
+    var childrens = <Widget>[];
+
+    if (!_isLoading && !_hasError) {
+      childrens.add(
+        new Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: _temperatures
+              .map((t) => Container(
+                    child: InkWell(
+                      child: TemperatureCard(t, _sensors.firstWhere((s) => s.id == t.sensorID)),
+                      onTap: () => navigateToDetails(context, t),
+                    ),
+                    margin: EdgeInsets.only(top: 5),
+                  ))
+              .toList(),
+        ),
+      );
+    }
 
     if (_isLoading) {
       childrens.add(LoadingOverlay());
+    }
+
+    if (_hasError) {
+      childrens.add(Center(child:  Text("a fucking Error occured, please reload..."),));
     }
 
     return childrens;
