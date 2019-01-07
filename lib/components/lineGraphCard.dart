@@ -11,7 +11,6 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 class LineGraphCard extends StatefulWidget {
   List<Temperature> _temperatures = new List();
 
-
   LineGraphCard(this._temperatures);
 
   @override
@@ -39,63 +38,86 @@ class _LineGraphCardState extends State<LineGraphCard> {
     // TODO: implement build
     return CustomCard(
         child: Column(
-      children: <Widget>[
-        Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Container(
-                  width: 150,
-                  child: DateTimePickerFormField(
-                    editable: false,
-                    initialValue: _startDate,
-                    format: dateFormat,
-                    decoration: InputDecoration(labelText: "von"),
-                    onChanged: (d) => setState(() {
-                          _startDate = d;
-                          updateChart();
-                        }),
-                  )),
-              Container(
-                  width: 150,
-                  child: DateTimePickerFormField(
-                    editable: false,
-                    initialDate: _endDate,
-                    format: dateFormat,
-                    decoration: InputDecoration(labelText: "bis"),
-                    onChanged: (d) => setState(() {
-                          _endDate = d;
-                          updateChart();
-                        }),
-                  )),
-            ],
-          ),
-        ),
-        Container(
-          height: 300,
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.all(10),
-          //maybe replace this Chart with a selfmade widget, which uses this chart
-          child:_series.length!=0?charts.TimeSeriesChart(
-            _series,
-            dateTimeFactory: charts.LocalDateTimeFactory(),
-            animate: true,
-            selectionModels: [
-              charts.SelectionModelConfig(type: charts.SelectionModelType.info, changedListener: _onSelectionChanged),
-            ],
-          ):Container(),
-        ),
-        Container(
-          margin: EdgeInsets.only(bottom: 5),
-          child: Column(
-            children: <Widget>[
-              Text((_selectedTemperature != null ? _selectedTemperature.temperature.toString() + "°C" : "")),
-              Text(_selectedTemperature != null ? DateFormat(DateFormat.YEAR_MONTH_DAY).format(_selectedTemperature.time) : ""),
-            ],
-          ),
-        )
-      ],
-    ));
+          children: <Widget>[
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                      width: 150,
+                      child: DateTimePickerFormField(
+                        editable: false,
+                        initialValue: _startDate,
+                        format: dateFormat,
+                        decoration: InputDecoration(labelText: "von"),
+                        onChanged: (d) =>
+                            setState(() {
+                              _startDate = d;
+                              updateChart();
+                            }),
+                      )),
+                  Container(
+                      width: 150,
+                      child: DateTimePickerFormField(
+                        editable: false,
+                        initialDate: _endDate,
+                        format: dateFormat,
+                        decoration: InputDecoration(labelText: "bis"),
+                        onChanged: (d) =>
+                            setState(() {
+                              _endDate = d;
+                              updateChart();
+                            }),
+                      )),
+                ],
+              ),
+            ),
+            Container(
+              height: 50,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  // @formatter:off
+                  Container(child: RaisedButton(color: Colors.white,child: Text("1d"),onPressed: (){_setGraphDate(Duration(days: 1));},),),
+                  Container(child: RaisedButton(color: Colors.white,child: Text("7D"),onPressed: (){_setGraphDate(Duration(days: 7));},),),
+                  Container(child: RaisedButton(color: Colors.white,child: Text("1M"),onPressed: (){_setGraphDate(Duration(days: 31));},),),
+                  Container(child: RaisedButton(color: Colors.white,child: Text("6M"),onPressed: (){_setGraphDate(Duration(days: 186));},),),
+                  Container(child: RaisedButton(color: Colors.white,child: Text("1Y"),onPressed: (){_setGraphDate(Duration(days: 365));},),),
+                  Container(child: RaisedButton(color: Colors.white,child: Text("ALL"),onPressed: (){_setGraphDateToMax();},),),
+                  // @formatter:on
+                ],
+              ),
+            ),
+            Container(
+              height: 300,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
+              padding: EdgeInsets.all(10),
+              //maybe replace this Chart with a selfmade widget, which uses this chart
+              child: _series.length != 0
+                  ? charts.TimeSeriesChart(
+                _series,
+                dateTimeFactory: charts.LocalDateTimeFactory(),
+                animate: true,
+                selectionModels: [
+                  charts.SelectionModelConfig(type: charts.SelectionModelType.info, changedListener: _onSelectionChanged),
+                ],
+              )
+                  : Container(),
+            ),
+            Container(
+              margin: EdgeInsets.only(bottom: 5),
+              child: Column(
+                children: <Widget>[
+                  Text((_selectedTemperature != null ? _selectedTemperature.temperature.toString() + "°C" : "")),
+                  Text(_selectedTemperature != null ? DateFormat(DateFormat.YEAR_MONTH_DAY).format(_selectedTemperature.time) : ""),
+                ],
+              ),
+            )
+          ],
+        ));
   }
 
   void updateChart() {
@@ -120,25 +142,40 @@ class _LineGraphCardState extends State<LineGraphCard> {
 
   Future<List<Temperature>> downsizeList(List<Temperature> temps, DateTime startDate, DateTime endDate) {
     return new Future(() {
-      var list=temps;
-      var result=new List<Temperature>();
-      if(startDate!=null){
-        list=list.where((t) => t.time.isAfter(startDate)).toList();
+      var list = temps;
+      var result = new List<Temperature>();
+      if (startDate != null) {
+        list = list.where((t) => t.time.isAfter(startDate)).toList();
       }
-      if(endDate!=null){
-        list=list.where((t) => t.time.isBefore(endDate)).toList();
+      if (endDate != null) {
+        list = list.where((t) => t.time.isBefore(endDate)).toList();
       }
-      if(list.length>1000){
-        for(int i=0;i<list.length;i++){
-          if(i%100==0){
+      if (list.length > 1000) {
+        for (int i = 0; i < list.length; i++) {
+          if (i % 100 == 0) {
             result.add(list[i]);
           }
         }
-      }
-      else{
-        result=list;
+      } else {
+        result = list;
       }
       return result;
     });
+  }
+
+  _setGraphDate(Duration beforeEndDate) {
+    setState(() {
+      _startDate = widget._temperatures.last.time.subtract(beforeEndDate);
+      _endDate = widget._temperatures.last.time;
+    });
+    updateChart();
+  }
+
+  _setGraphDateToMax() {
+    setState(() {
+      _startDate = widget._temperatures.first.time;
+      _endDate = widget._temperatures.last.time;
+    });
+    updateChart();
   }
 }
