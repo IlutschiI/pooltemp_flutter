@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pooltemp_flutter/components/DateTimePicker.dart';
+import 'package:pooltemp_flutter/components/dateTimePicker.dart';
 import 'package:pooltemp_flutter/components/card.dart';
 import 'package:pooltemp_flutter/components/loadingOverlay.dart';
 import 'package:pooltemp_flutter/components/temperatureCard.dart';
@@ -19,6 +19,7 @@ class _DashBoardState extends State<DashBoard> {
   List<Sensor> _sensors = new List();
   List<Temperature> _temperatures = new List();
   TemperatureService _service = TemperatureService();
+  DateTime tempTime = DateTime.now(); //TO be removed
 
   bool _isLoading = true;
   bool _hasError = false;
@@ -88,15 +89,22 @@ class _DashBoardState extends State<DashBoard> {
 
     if (!_isLoading && !_hasError) {
       var list = _temperatures
-              .map((t) => Container(
-                    child: InkWell(
-                      child: TemperatureCard(t, _sensors.firstWhere((s) => s.id == t.sensorID)),
-                      onTap: () => navigateToDetails(context, t),
-                    ),
-                    margin: EdgeInsets.only(top: 5),
-                  ))
-              .toList();
-      list.add(Container(child: DateTimePicker(height: 100,value: DateTime.now(),),));
+          .map((t) => Container(
+                child: InkWell(
+                  child: TemperatureCard(t, _sensors.firstWhere((s) => s.id == t.sensorID)),
+                  onTap: () => navigateToDetails(context, t),
+                ),
+                margin: EdgeInsets.only(top: 5),
+              ))
+          .toList();
+      list.add(Container(
+        child: DateTimePicker(
+          value: tempTime,
+          onValueChanged: (d) {
+            print('callback: ${d.toString()}');
+          },
+        ),
+      ));
       childrens.add(
         new Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -110,9 +118,12 @@ class _DashBoardState extends State<DashBoard> {
     }
 
     if (_hasError) {
-      childrens.add(Center(child:  Text("a fucking Error occured, please reload..."),));
+      childrens.add(Center(
+        child: Text("a fucking Error occured, please reload..."),
+      ));
     }
 
+    print('${tempTime.toString()}');
     return childrens;
   }
 }
