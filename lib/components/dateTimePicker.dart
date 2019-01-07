@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pooltemp_flutter/util/dateTimeUtil.dart';
 
 class DateTimePicker extends StatefulWidget {
   final double height;
@@ -22,7 +23,7 @@ class DateTimePickerState extends State<DateTimePicker> {
 
   @override
   Widget build(BuildContext context) {
-    txt.text = widget.value.toString();
+    txt.text =DateTimeUtil.format(widget.value);
 
     return Container(
         padding: widget.padding ?? EdgeInsets.all(5),
