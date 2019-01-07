@@ -19,7 +19,6 @@ class _DashBoardState extends State<DashBoard> {
   List<Sensor> _sensors = new List();
   List<Temperature> _temperatures = new List();
   TemperatureService _service = TemperatureService();
-  DateTime tempTime = DateTime.now(); //TO be removed
 
   bool _isLoading = true;
   bool _hasError = false;
@@ -97,14 +96,6 @@ class _DashBoardState extends State<DashBoard> {
                 margin: EdgeInsets.only(top: 5),
               ))
           .toList();
-      list.add(Container(
-        child: DateTimePicker(
-          value: tempTime,
-          onValueChanged: (d) {
-            print('callback: ${d.toString()}');
-          },
-        ),
-      ));
       childrens.add(
         new Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +114,6 @@ class _DashBoardState extends State<DashBoard> {
       ));
     }
 
-    print('${tempTime.toString()}');
     return childrens;
   }
 }
