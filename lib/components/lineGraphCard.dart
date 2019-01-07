@@ -68,17 +68,18 @@ class _LineGraphCardState extends State<LineGraphCard> {
               ),
             ),
             Container(
-              height: 50,
+              margin: EdgeInsets.all(5),
+              height: 25,
               child: ListView(
-                scrollDirection: Axis.horizontal,
+                scrollDirection: Axis.horizontal,itemExtent: 65,
                 children: <Widget>[
                   // @formatter:off
-                  Container(child: RaisedButton(color: Colors.white,child: Text("1d"),onPressed: (){_setGraphDate(Duration(days: 1));},),),
-                  Container(child: RaisedButton(color: Colors.white,child: Text("7D"),onPressed: (){_setGraphDate(Duration(days: 7));},),),
-                  Container(child: RaisedButton(color: Colors.white,child: Text("1M"),onPressed: (){_setGraphDate(Duration(days: 31));},),),
-                  Container(child: RaisedButton(color: Colors.white,child: Text("6M"),onPressed: (){_setGraphDate(Duration(days: 186));},),),
-                  Container(child: RaisedButton(color: Colors.white,child: Text("1Y"),onPressed: (){_setGraphDate(Duration(days: 365));},),),
-                  Container(child: RaisedButton(color: Colors.white,child: Text("ALL"),onPressed: (){_setGraphDateToMax();},),),
+                  Container(margin: EdgeInsets.all(2.5), child: RaisedButton(color: Colors.white,child: Text("1D"),onPressed: (){_setGraphDate(Duration(days: 1));},),),
+                  Container(margin: EdgeInsets.all(2.5), child: RaisedButton(color: Colors.white,child: Text("7D"),onPressed: (){_setGraphDate(Duration(days: 7));},),),
+                  Container(margin: EdgeInsets.all(2.5), child: RaisedButton(color: Colors.white,child: Text("1M"),onPressed: (){_setGraphDate(Duration(days: 31));},),),
+                  Container(margin: EdgeInsets.all(2.5), child: RaisedButton(color: Colors.white,child: Text("6M"),onPressed: (){_setGraphDate(Duration(days: 186));},),),
+                  Container(margin: EdgeInsets.all(2.5), child: RaisedButton(color: Colors.white,child: Text("1Y"),onPressed: (){_setGraphDate(Duration(days: 365));},),),
+                  Container(margin: EdgeInsets.all(2.5), child: RaisedButton(color: Colors.white,child: Text("ALL"),onPressed: (){_setGraphDateToMax();},),),
                   // @formatter:on
                 ],
               ),
