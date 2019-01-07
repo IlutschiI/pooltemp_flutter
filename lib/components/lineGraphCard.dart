@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pooltemp_flutter/components/DateTimePicker.dart';
 import 'package:pooltemp_flutter/components/card.dart';
 import 'package:pooltemp_flutter/converter/temperatureSeriesConverter.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
@@ -45,12 +46,9 @@ class _LineGraphCardState extends State<LineGraphCard> {
                 children: <Widget>[
                   Container(
                       width: 150,
-                      child: DateTimePickerFormField(
-                        editable: false,
-                        initialValue: _startDate,
-                        format: dateFormat,
-                        decoration: InputDecoration(labelText: "von"),
-                        onChanged: (d) =>
+                      child: DateTimePicker(
+                        value: _startDate,
+                        onValueChanged: (d) =>
                             setState(() {
                               _startDate = d;
                               updateChart();
@@ -58,12 +56,9 @@ class _LineGraphCardState extends State<LineGraphCard> {
                       )),
                   Container(
                       width: 150,
-                      child: DateTimePickerFormField(
-                        editable: false,
-                        initialDate: _endDate,
-                        format: dateFormat,
-                        decoration: InputDecoration(labelText: "bis"),
-                        onChanged: (d) =>
+                      child: DateTimePicker(
+                        value: _endDate,
+                        onValueChanged: (d) =>
                             setState(() {
                               _endDate = d;
                               updateChart();
