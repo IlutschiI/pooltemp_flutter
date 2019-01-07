@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pooltemp_flutter/components/DateTimePicker.dart';
 import 'package:pooltemp_flutter/components/card.dart';
 import 'package:pooltemp_flutter/components/loadingOverlay.dart';
 import 'package:pooltemp_flutter/components/temperatureCard.dart';
@@ -86,10 +87,7 @@ class _DashBoardState extends State<DashBoard> {
     var childrens = <Widget>[];
 
     if (!_isLoading && !_hasError) {
-      childrens.add(
-        new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: _temperatures
+      var list = _temperatures
               .map((t) => Container(
                     child: InkWell(
                       child: TemperatureCard(t, _sensors.firstWhere((s) => s.id == t.sensorID)),
@@ -97,7 +95,12 @@ class _DashBoardState extends State<DashBoard> {
                     ),
                     margin: EdgeInsets.only(top: 5),
                   ))
-              .toList(),
+              .toList();
+      list.add(Container(child: DateTimePicker(height: 100,value: DateTime.now(),),));
+      childrens.add(
+        new Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: list,
         ),
       );
     }
