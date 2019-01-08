@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pooltemp_flutter/components/DateTimePicker.dart';
 import 'package:pooltemp_flutter/components/card.dart';
+import 'package:pooltemp_flutter/components/dateButton.dart';
 import 'package:pooltemp_flutter/converter/temperatureSeriesConverter.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
@@ -69,17 +70,17 @@ class _LineGraphCardState extends State<LineGraphCard> {
             ),
             Container(
               margin: EdgeInsets.all(5),
-              height: 25,
+              height: 30,
               child: ListView(
                 scrollDirection: Axis.horizontal,itemExtent: 65,
                 children: <Widget>[
                   // @formatter:off
-                  Container(margin: EdgeInsets.all(2.5), child: RaisedButton(color: Colors.white,child: Text("1D"),onPressed: (){_setGraphDate(Duration(days: 1));},),),
-                  Container(margin: EdgeInsets.all(2.5), child: RaisedButton(color: Colors.white,child: Text("7D"),onPressed: (){_setGraphDate(Duration(days: 7));},),),
-                  Container(margin: EdgeInsets.all(2.5), child: RaisedButton(color: Colors.white,child: Text("1M"),onPressed: (){_setGraphDate(Duration(days: 31));},),),
-                  Container(margin: EdgeInsets.all(2.5), child: RaisedButton(color: Colors.white,child: Text("6M"),onPressed: (){_setGraphDate(Duration(days: 186));},),),
-                  Container(margin: EdgeInsets.all(2.5), child: RaisedButton(color: Colors.white,child: Text("1Y"),onPressed: (){_setGraphDate(Duration(days: 365));},),),
-                  Container(margin: EdgeInsets.all(2.5), child: RaisedButton(color: Colors.white,child: Text("ALL"),onPressed: (){_setGraphDateToMax();},),),
+                  DateButton(color: Colors.white, text: "1D", onTap:(){ _setGraphDate(Duration(days: 1));},),
+                  DateButton(color: Colors.white, text: "7D", onTap:(){ _setGraphDate(Duration(days: 7));},),
+                  DateButton(color: Colors.white, text: "1M", onTap: (){_setGraphDate(Duration(days: 31));},),
+                  DateButton(color: Colors.white, text: "6M", onTap: (){_setGraphDate(Duration(days: 186));},),
+                  DateButton(color: Colors.white, text: "1Y", onTap: (){_setGraphDate(Duration(days: 365));},),
+                  DateButton(color: Colors.white, text: "ALL", onTap: (){_setGraphDateToMax();}),
                   // @formatter:on
                 ],
               ),
