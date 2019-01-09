@@ -10,15 +10,11 @@ class TemperatureService {
   }
 
   Future<Temperature> findHighestTemperatureForSensor(String sensor) async {
-    var list = await findAllTemperatureForSensor(sensor);
-    list.sort((temp1, temp2) => temp1.temperature.compareTo(temp2.temperature));
-    return list.last;
+    return _findHighestTemperatureForSensor(sensor);
   }
 
   Future<Temperature> findLowestTemperatureForSensor(String sensor) async {
-    var list = await findAllTemperatureForSensor(sensor);
-    list.sort((temp1, temp2) => temp1.temperature.compareTo(temp2.temperature));
-    return list.first;
+    return _findLowestTemperatureForSensor(sensor);
   }
 
   Future<List<Temperature>> findAllTemperatureForSensor(String sensor) async {
@@ -38,6 +34,30 @@ class TemperatureService {
       return result;
     } else {
       throw Exception("couldnt fetch data...");
+    }
+  }
+
+  Future<Temperature> _findHighestTemperatureForSensor(String sensor) async {
+    final response = await http.get(BaseUrl.baseURL + "/temperature/highest?sensor=" + sensor);
+
+    if(response.statusCode==200){
+
+      return Temperature.fromJson(json.decode(response.body));
+
+    }else{
+      throw Exception("couldnt fetch highest temperature for " + sensor);
+    }
+  }
+
+  Future<Temperature> _findLowestTemperatureForSensor(String sensor) async {
+    final response = await http.get(BaseUrl.baseURL + "/temperature/lowest?sensor=" + sensor);
+
+    if(response.statusCode==200){
+
+      return Temperature.fromJson(json.decode(response.body));
+
+    }else{
+      throw Exception("couldnt fetch lowest temperature for " + sensor);
     }
   }
 }
