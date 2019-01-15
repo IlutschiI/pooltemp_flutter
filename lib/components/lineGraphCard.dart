@@ -52,8 +52,7 @@ class _LineGraphCardState extends State<LineGraphCard> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Container(
-                          width: 150,
+                      Expanded(
                           child: DateTimePicker(
                             value: _startDate,
                             onValueChanged: (d) =>
@@ -62,8 +61,7 @@ class _LineGraphCardState extends State<LineGraphCard> {
                                   updateChart();
                                 }),
                           )),
-                      Container(
-                          width: 150,
+                      Expanded(
                           child: DateTimePicker(
                             value: _endDate,
                             onValueChanged: (d) =>
