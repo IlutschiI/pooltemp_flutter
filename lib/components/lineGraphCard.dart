@@ -1,13 +1,16 @@
 import 'dart:math';
 
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pooltemp_flutter/components/DateTimePicker.dart';
 import 'package:pooltemp_flutter/components/card.dart';
 import 'package:pooltemp_flutter/converter/temperatureSeriesConverter.dart';
+import 'package:pooltemp_flutter/model/downsizeListWrapper.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:pooltemp_flutter/service/temperatureListService.dart';
 
 class LineGraphCard extends StatefulWidget {
   List<Temperature> _temperatures = new List();
@@ -116,12 +119,17 @@ class _LineGraphCardState extends State<LineGraphCard> {
         ));
   }
 
-  void updateChart() {
-    downsizeList(widget._temperatures, _startDate, _endDate).then((list) {
+  void updateChart() async {
+    DownsizeListWrapper wrapper= DownsizeListWrapper(widget._temperatures, _startDate, _endDate);
+    var list = await compute(TemperatureListService.downsizeList, wrapper);
+    setState(() {
+      _series = TemperatureSeriesConverter().convert(list);
+    });
+   /* downsizeList(widget._temperatures, _startDate, _endDate).then((list) {
       setState(() {
         _series = TemperatureSeriesConverter().convert(list);
       });
-    });
+    });*/
   }
 
   _onSelectionChanged(charts.SelectionModel<DateTime> model) {
@@ -134,29 +142,6 @@ class _LineGraphCardState extends State<LineGraphCard> {
         _selectedTemperature = null;
       });
     }
-  }
-
-  Future<List<Temperature>> downsizeList(List<Temperature> temps, DateTime startDate, DateTime endDate) {
-    return new Future(() {
-      var list = temps;
-      var result = new List<Temperature>();
-      if (startDate != null) {
-        list = list.where((t) => t.time.isAfter(startDate)).toList();
-      }
-      if (endDate != null) {
-        list = list.where((t) => t.time.isBefore(endDate)).toList();
-      }
-      if (list.length > 1000) {
-        for (int i = 0; i < list.length; i++) {
-          if (i % 100 == 0) {
-            result.add(list[i]);
-          }
-        }
-      } else {
-        result = list;
-      }
-      return result;
-    });
   }
 
   _setGraphDate(Duration beforeEndDate) {
