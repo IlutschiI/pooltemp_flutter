@@ -27,17 +27,12 @@ class TemperatureDetails extends StatelessWidget {
                 future: loadGraph(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
-                    return LineGraphCard(snapshot.data);
+                    return LineGraphCard(
+                      temperatures: snapshot.data,
+                    );
                   } else {
-                    return Center(
-                      child: CustomCard(
-                          child: Container(
-                        height: 300,
-                        width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.all(10),
-                        //maybe replace this Chart with a selfmade widget, which uses this chart
-                        child: Center(child: CircularProgressIndicator()),
-                      )),
+                    return Container(
+                      child: LineGraphCard(),
                     );
                   }
                 }),
