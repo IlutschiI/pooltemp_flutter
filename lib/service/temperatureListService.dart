@@ -5,6 +5,9 @@ class TemperatureListService {
 
   static List<Temperature> downsizeList(DownsizeListWrapper wrapper){
     var list = wrapper.temperatures;
+    if(list==null){
+      return List();
+    }
     var result = new List<Temperature>();
     if (wrapper.startDate != null) {
       list = list.where((t) => t.time.isAfter(wrapper.startDate)).toList();
