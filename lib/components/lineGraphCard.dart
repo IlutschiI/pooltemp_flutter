@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:pooltemp_flutter/components/DateTimePicker.dart';
 import 'package:pooltemp_flutter/components/card.dart';
 import 'package:pooltemp_flutter/components/dateButton.dart';
-import 'package:pooltemp_flutter/components/loadingOverlay.dart';
 import 'package:pooltemp_flutter/converter/temperatureSeriesConverter.dart';
 import 'package:pooltemp_flutter/model/downsizeListWrapper.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:pooltemp_flutter/service/temperatureListService.dart';
 
 class LineGraphCard extends StatefulWidget {
@@ -54,12 +50,14 @@ class _LineGraphCardState extends State<LineGraphCard> {
                     children: <Widget>[
                       Expanded(
                           child: DateTimePicker(
+                            timeEnabled: true,
                             value: _startDate,
-                            onValueChanged: (d) =>
-                                setState(() {
-                                  _startDate = d;
-                                  updateChart();
-                                }),
+                            onValueChanged: (d) {
+                              setState(() {
+                                _startDate = d;
+                              });
+                              updateChart();
+                            },
                           )),
                       Expanded(
                           child: DateTimePicker(
@@ -128,7 +126,7 @@ class _LineGraphCardState extends State<LineGraphCard> {
 
 
   void updateChart() async {
-    DownsizeListWrapper wrapper= DownsizeListWrapper(widget.temperatures, _startDate, _endDate);
+    DownsizeListWrapper wrapper = DownsizeListWrapper(widget.temperatures, _startDate, _endDate);
     var list = await compute(TemperatureListService.downsizeList, wrapper);
     setState(() {
       _series = TemperatureSeriesConverter().convert(list);
@@ -146,6 +144,7 @@ class _LineGraphCardState extends State<LineGraphCard> {
       });
     }
   }
+
   _setGraphDate(Duration beforeEndDate) {
     setState(() {
       _startDate = widget.temperatures.last.time.subtract(beforeEndDate);
