@@ -37,7 +37,6 @@ class DateTimePickerState extends State<DateTimePicker> {
         width: widget.width ?? double.infinity,
         child: InkWell(
           child: TextField(
-
             controller: txt,
             enabled: false,
           ),

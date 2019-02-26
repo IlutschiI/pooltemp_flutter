@@ -50,7 +50,7 @@ class _LineGraphCardState extends State<LineGraphCard> {
                     children: <Widget>[
                       Expanded(
                           child: DateTimePicker(
-                            timeEnabled: true,
+                            timeEnabled: false,
                             value: _startDate,
                             onValueChanged: (d) {
                               setState(() {
@@ -61,10 +61,12 @@ class _LineGraphCardState extends State<LineGraphCard> {
                           )),
                       Expanded(
                           child: DateTimePicker(
+                            timeEnabled: false,
                             value: _endDate,
                             onValueChanged: (d) =>
                                 setState(() {
                                   _endDate = d;
+                                  _endDate.add(Duration(hours: 23,minutes: 59,seconds: 59));
                                   updateChart();
                                 }),
                           )),
