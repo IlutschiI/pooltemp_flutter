@@ -114,7 +114,7 @@ class _LineGraphCardState extends State<LineGraphCard> {
                   child: Column(
                     children: <Widget>[
                       Text((_selectedTemperature != null ? _selectedTemperature.temperature.toString() + "°C" : "")),
-                      Text(_selectedTemperature != null ? DateFormat(DateFormat.YEAR_MONTH_DAY).format(_selectedTemperature.time) : ""),
+                      Text(_selectedTemperature != null ? DateFormat("d MMMM y HH:mm").format(_selectedTemperature.time) : ""),
                     ],
                   ),
                 )
