@@ -1,15 +1,29 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pooltemp_flutter/components/LineChart.dart';
 import 'package:pooltemp_flutter/components/card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pooltemp_flutter/converter/temperatureSeriesConverter.dart';
+import 'package:pooltemp_flutter/model/downsizeListWrapper.dart';
 import 'package:pooltemp_flutter/model/sensor.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
+import 'package:pooltemp_flutter/service/temperatureListService.dart';
+import 'package:pooltemp_flutter/service/temperatureService.dart';
 
-class TemperatureCard extends StatelessWidget {
+class TemperatureCard extends StatefulWidget {
   final Temperature _temperature;
-
+  TemperatureService _service = TemperatureService();
   final Sensor _sensor;
 
   TemperatureCard(this._temperature, this._sensor);
+
+  @override
+  _TemperatureCardState createState() => _TemperatureCardState();
+}
+
+class _TemperatureCardState extends State<TemperatureCard> {
+
+  List<Temperature> _temperatures=List();
 
   @override
   Widget build(BuildContext context) {
@@ -20,18 +34,31 @@ class TemperatureCard extends StatelessWidget {
         Container(
           margin: EdgeInsets.only(top: 10),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text(
-                "${_temperature.temperature.toStringAsFixed(2)} °C",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              Row(
+                children: <Widget>[
+                  Text(
+                    "${widget._temperature.temperature.toStringAsFixed(2)} °C",
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                    child: Icon(
+                      FontAwesomeIcons.thermometerHalf,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
               ),
-              Container(
-                child: Icon(
-                  FontAwesomeIcons.thermometerHalf,
-                  color: Colors.black,
-                ),
-              )
+              FutureBuilder(
+                future: loadGraphData(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if(snapshot.hasData){
+                    return Container(height: 50, width: 100, child: LineChart(series: snapshot.data, isZoomable: false,showXAxis: false,),);
+                  } else{
+                    return Container(height: 50, width: 100, child: Center(child: CircularProgressIndicator()),);
+                  }
+              },)
             ],
           ),
         ),
@@ -41,7 +68,7 @@ class TemperatureCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Text(_sensor.name!=null?_sensor.name.trim():_sensor.id.trim(),
+              Text(widget._sensor.name!=null?widget._sensor.name.trim():widget._sensor.id.trim(),
                 style: TextStyle(color: Colors.grey),
               ),
               Container(
@@ -56,5 +83,14 @@ class TemperatureCard extends StatelessWidget {
         )
       ],
     ));
+  }
+
+  Future<List> loadGraphData() async {
+    var temperatures = await widget._service.findAllTemperatureForSensor(widget._sensor.id);
+    var _startDate = temperatures.last.time.subtract(Duration(days: 1));
+    var _endDate = temperatures.last.time;
+    DownsizeListWrapper wrapper = DownsizeListWrapper(temperatures, _startDate, _endDate);
+    var list = await compute(TemperatureListService.downsizeList, wrapper);
+    return TemperatureSeriesConverter().convert(list);
   }
 }
