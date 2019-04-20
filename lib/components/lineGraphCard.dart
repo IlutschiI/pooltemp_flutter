@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pooltemp_flutter/components/DateTimePicker.dart';
+import 'package:pooltemp_flutter/components/LineChart.dart';
 import 'package:pooltemp_flutter/components/card.dart';
 import 'package:pooltemp_flutter/components/dateButton.dart';
 import 'package:pooltemp_flutter/converter/temperatureSeriesConverter.dart';
@@ -100,15 +101,7 @@ class _LineGraphCardState extends State<LineGraphCard> {
                   padding: EdgeInsets.all(10),
                   //maybe replace this Chart with a selfmade widget, which uses this chart
                   child: _series.length != 0
-                      ? charts.TimeSeriesChart(
-                    _series,
-                    behaviors: []..addAll(widget.isZoomable?[charts.PanAndZoomBehavior()]:[]),
-                    dateTimeFactory: charts.LocalDateTimeFactory(),
-                    animate: true,
-                    selectionModels: [
-                      charts.SelectionModelConfig(type: charts.SelectionModelType.info, changedListener: _onSelectionChanged),
-                    ],
-                  )
+                      ? buildLineChart()
                       : Container(),
                 ),
                 Container(
@@ -126,6 +119,10 @@ class _LineGraphCardState extends State<LineGraphCard> {
             CircularProgressIndicator() : Container()
           ],
         ));
+  }
+
+  Widget buildLineChart() {
+    return LineChart(series: _series, onChangeListener: _onSelectionChanged, isZoomable: true,);
   }
 
 
