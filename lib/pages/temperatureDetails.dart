@@ -29,6 +29,7 @@ class TemperatureDetails extends StatelessWidget {
                   if (snapshot.hasData) {
                     return LineGraphCard(
                       temperatures: snapshot.data,
+                      isZoomable: true,
                     );
                   } else {
                     return Container(

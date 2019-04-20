@@ -12,8 +12,9 @@ import 'package:pooltemp_flutter/service/temperatureListService.dart';
 
 class LineGraphCard extends StatefulWidget {
   List<Temperature> temperatures = new List();
+  bool isZoomable;
 
-  LineGraphCard({this.temperatures});
+  LineGraphCard({this.temperatures, this.isZoomable = false});
 
   @override
   _LineGraphCardState createState() {
@@ -66,7 +67,7 @@ class _LineGraphCardState extends State<LineGraphCard> {
                             onValueChanged: (d) =>
                                 setState(() {
                                   _endDate = d;
-                                  _endDate.add(Duration(hours: 23,minutes: 59,seconds: 59));
+                                  _endDate.add(Duration(hours: 23, minutes: 59, seconds: 59));
                                   updateChart();
                                 }),
                           )),
@@ -101,6 +102,7 @@ class _LineGraphCardState extends State<LineGraphCard> {
                   child: _series.length != 0
                       ? charts.TimeSeriesChart(
                     _series,
+                    behaviors: []..addAll(widget.isZoomable?[charts.PanAndZoomBehavior()]:[]),
                     dateTimeFactory: charts.LocalDateTimeFactory(),
                     animate: true,
                     selectionModels: [
