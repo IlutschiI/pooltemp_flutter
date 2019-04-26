@@ -22,8 +22,6 @@ class TemperatureCard extends StatefulWidget {
 }
 
 class _TemperatureCardState extends State<TemperatureCard> {
-  List<Temperature> _temperatures = List();
-
   @override
   Widget build(BuildContext context) {
     return new CustomCard(
