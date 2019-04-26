@@ -58,6 +58,7 @@ class _TemperatureCardState extends State<TemperatureCard> {
                                 series: snapshot.data,
                                 isZoomable: false,
                                 showXAxis: false,
+                                shrinkYAxis: true,
                               )
                             : Center(child: CircularProgressIndicator()),
                       ),
