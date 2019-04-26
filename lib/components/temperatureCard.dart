@@ -25,66 +25,69 @@ class _TemperatureCardState extends State<TemperatureCard> {
   @override
   Widget build(BuildContext context) {
     return new CustomCard(
-        child: new Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Text(
-                    "${widget._temperature.temperature.toStringAsFixed(2)} °C",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
-                  Container(
-                    child: Icon(
-                      FontAwesomeIcons.thermometerHalf,
-                      color: Colors.black,
+      child: new Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Text(
+                      "${widget._temperature.temperature.toStringAsFixed(2)} °C",
+                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                ],
-              ),
-              FutureBuilder(
-                future: loadGraphData(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  return Container(
-                    height: 70,
-                    width: 150,
-                    child: snapshot.hasData
-                        ? LineChart(
-                            series: snapshot.data,
-                            isZoomable: false,
-                            showXAxis: false,
-                          )
-                        : Center(child: CircularProgressIndicator()),
-                  );
-                },
-              )
-            ],
-          ),
-        ),
-        Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Text(
-                widget._sensor.name != null ? widget._sensor.name.trim() : widget._sensor.id.trim(),
-                style: TextStyle(color: Colors.grey),
-              ),
-              Container(
-                child: Icon(
-                  Icons.wifi_tethering,
-                  color: Colors.grey,
+                    Container(
+                      child: Icon(
+                        FontAwesomeIcons.thermometerHalf,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
-              )
-            ],
+                FutureBuilder(
+                  future: loadGraphData(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    return Expanded(
+                      child: Container(
+                        height: 70,
+                        child: snapshot.hasData
+                            ? LineChart(
+                                series: snapshot.data,
+                                isZoomable: false,
+                                showXAxis: false,
+                              )
+                            : Center(child: CircularProgressIndicator()),
+                      ),
+                    );
+                  },
+                )
+              ],
+            ),
           ),
-        )
-      ],
-    ));
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Text(
+                  widget._sensor.name != null ? widget._sensor.name.trim() : widget._sensor.id.trim(),
+                  style: TextStyle(color: Colors.grey),
+                ),
+                Container(
+                  child: Icon(
+                    Icons.wifi_tethering,
+                    color: Colors.grey,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<List> loadGraphData() async {
