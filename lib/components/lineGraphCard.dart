@@ -10,6 +10,7 @@ import 'package:pooltemp_flutter/converter/temperatureSeriesConverter.dart';
 import 'package:pooltemp_flutter/model/downsizeListWrapper.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
 import 'package:pooltemp_flutter/service/temperatureListService.dart';
+import 'dart:math';
 
 class LineGraphCard extends StatefulWidget {
   List<Temperature> temperatures = new List();
@@ -42,89 +43,124 @@ class _LineGraphCardState extends State<LineGraphCard> {
     // TODO: implement build
     return CustomCard(
         child: Stack(
-          alignment: AlignmentDirectional.center,
+      alignment: AlignmentDirectional.center,
+      children: <Widget>[
+        Column(
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Expanded(
-                          child: DateTimePicker(
-                            timeEnabled: false,
-                            value: _startDate,
-                            onValueChanged: (d) {
-                              setState(() {
-                                _startDate = d;
-                              });
-                              updateChart();
-                            },
-                          )),
-                      Expanded(
-                          child: DateTimePicker(
-                            timeEnabled: false,
-                            value: _endDate,
-                            onValueChanged: (d) =>
-                                setState(() {
-                                  _endDate = d;
-                                  _endDate.add(Duration(hours: 23, minutes: 59, seconds: 59));
-                                  updateChart();
-                                }),
-                          )),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(5),
-                  height: 30,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal, itemExtent: 65,
-                    children: <Widget>[
-                      // @formatter:off
-                      DateButton(color: Colors.white, text: "1D", onTap:(){ _setGraphDate(Duration(days: 1));},),
-                      DateButton(color: Colors.white, text: "7D", onTap:(){ _setGraphDate(Duration(days: 7));},),
-                      DateButton(color: Colors.white, text: "1M", onTap: (){_setGraphDate(Duration(days: 31));},),
-                      DateButton(color: Colors.white, text: "6M", onTap: (){_setGraphDate(Duration(days: 186));},),
-                      DateButton(color: Colors.white, text: "1Y", onTap: (){_setGraphDate(Duration(days: 365));},),
-                      DateButton(color: Colors.white, text: "ALL", onTap: (){_setGraphDateToMax();}),
-                      // @formatter:on
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 300,
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
-                  padding: EdgeInsets.all(10),
-                  //maybe replace this Chart with a selfmade widget, which uses this chart
-                  child: _series.length != 0
-                      ? buildLineChart()
-                      : Container(),
-                ),
-                Container(
-                  margin: EdgeInsets.only(bottom: 5),
-                  child: Column(
-                    children: <Widget>[
-                      Text((_selectedTemperature != null ? _selectedTemperature.temperature.toString() + "°C" : "")),
-                      Text(_selectedTemperature != null ? DateFormat("d MMMM y HH:mm").format(_selectedTemperature.time) : ""),
-                    ],
-                  ),
-                )
-              ],
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Expanded(
+                      child: DateTimePicker(
+                    timeEnabled: false,
+                    value: _startDate,
+                    onValueChanged: (d) {
+                      setState(() {
+                        _startDate = d;
+                      });
+                      updateChart();
+                    },
+                  )),
+                  Expanded(
+                      child: DateTimePicker(
+                    timeEnabled: false,
+                    value: _endDate,
+                    onValueChanged: (d) => setState(() {
+                          _endDate = d;
+                          _endDate.add(Duration(hours: 23, minutes: 59, seconds: 59));
+                          updateChart();
+                        }),
+                  )),
+                ],
+              ),
             ),
-            widget.temperatures == null ?
-            CircularProgressIndicator() : Container()
+            Container(
+              margin: EdgeInsets.all(5),
+              height: 30,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                itemExtent: 65,
+                children: <Widget>[
+                  // @formatter:off
+                  DateButton(
+                    color: Colors.white,
+                    text: "1D",
+                    onTap: () {
+                      _setGraphDate(Duration(days: 1));
+                    },
+                  ),
+                  DateButton(
+                    color: Colors.white,
+                    text: "7D",
+                    onTap: () {
+                      _setGraphDate(Duration(days: 7));
+                    },
+                  ),
+                  DateButton(
+                    color: Colors.white,
+                    text: "1M",
+                    onTap: () {
+                      _setGraphDate(Duration(days: 31));
+                    },
+                  ),
+                  DateButton(
+                    color: Colors.white,
+                    text: "6M",
+                    onTap: () {
+                      _setGraphDate(Duration(days: 186));
+                    },
+                  ),
+                  DateButton(
+                    color: Colors.white,
+                    text: "1Y",
+                    onTap: () {
+                      _setGraphDate(Duration(days: 365));
+                    },
+                  ),
+                  DateButton(
+                      color: Colors.white,
+                      text: "ALL",
+                      onTap: () {
+                        _setGraphDateToMax();
+                      }),
+                  // @formatter:on
+                ],
+              ),
+            ),
+            Container(
+              height: 300,
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.all(10),
+              //maybe replace this Chart with a selfmade widget, which uses this chart
+              child: _series.length != 0 ? buildLineChart() : Container(),
+            ),
+            Container(
+              margin: EdgeInsets.only(bottom: 5),
+              child: Column(
+                children: <Widget>[
+                  Text((_selectedTemperature != null ? _selectedTemperature.temperature.toString() + "°C" : "")),
+                  Text(_selectedTemperature != null ? DateFormat("d MMMM y HH:mm").format(_selectedTemperature.time) : ""),
+                ],
+              ),
+            )
           ],
-        ));
+        ),
+        widget.temperatures == null ? CircularProgressIndicator() : Container()
+      ],
+    ));
   }
 
   Widget buildLineChart() {
-    return LineChart(series: _series, onChangeListener: _onSelectionChanged, isZoomable: true,);
+    double maxValue = 10;
+    if (widget.temperatures != null) maxValue = widget.temperatures.map((t) => t.temperature).reduce(max);
+    return LineChart(
+      series: _series,
+      onChangeListener: _onSelectionChanged,
+      isZoomable: true,
+      maxValue: maxValue,
+    );
   }
-
 
   void updateChart() async {
     DownsizeListWrapper wrapper = DownsizeListWrapper(widget.temperatures, _startDate, _endDate);
