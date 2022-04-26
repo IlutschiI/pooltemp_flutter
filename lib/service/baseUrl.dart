@@ -1,3 +1,3 @@
 abstract class BaseUrl{
-  static const String baseURL="http://mypooltemp.ddns.net:8000";
+  static const String baseURL="http://lwickenhauser.com";
 }
