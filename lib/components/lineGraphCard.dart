@@ -27,7 +27,6 @@ class LineGraphCard extends StatefulWidget {
 class _LineGraphCardState extends State<LineGraphCard> {
   charts.LineChartData _series = charts.LineChartData();
   final dateFormat = DateFormat("dd.MM.yyyy");
-  Temperature? _selectedTemperature;
   DateTime? _startDate;
   DateTime? _endDate;
 
@@ -80,7 +79,6 @@ class _LineGraphCardState extends State<LineGraphCard> {
               height: 30,
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                itemExtent: 65,
                 children: <Widget>[
                   // @formatter:off
                   DateButton(
@@ -135,15 +133,6 @@ class _LineGraphCardState extends State<LineGraphCard> {
               //maybe replace this Chart with a selfmade widget, which uses this chart
               child:  buildLineChart(),
             ),
-            Container(
-              margin: EdgeInsets.only(bottom: 5),
-              child: Column(
-                children: <Widget>[
-                  Text((_selectedTemperature != null ? _selectedTemperature!.temperature.toString() + "°C" : "")),
-                  Text(_selectedTemperature != null ? DateFormat("d MMMM y HH:mm").format(_selectedTemperature!.time) : ""),
-                ],
-              ),
-            )
           ],
         ),
         widget.temperatures == null ? CircularProgressIndicator() : Container()
