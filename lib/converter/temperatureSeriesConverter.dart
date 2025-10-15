@@ -15,8 +15,11 @@ class TemperatureSeriesConverter {
         ),
       ),
       lineTouchData: LineTouchData(
+        touchSpotThreshold: 20,
         enabled: enableTooltips,
+        longPressDuration: Duration(),
         touchTooltipData: LineTouchTooltipData(
+          fitInsideHorizontally: true,
           getTooltipItems: (touchedSpots) {
             return touchedSpots.map((e) {
               return LineTooltipItem(
