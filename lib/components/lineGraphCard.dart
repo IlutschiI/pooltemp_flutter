@@ -159,18 +159,6 @@ class _LineGraphCardState extends State<LineGraphCard> {
     });
   }
 
-  // _onSelectionChanged(charts.SelectionModel<DateTime> model) {
-  //   if (model.hasAnySelection) {
-  //     setState(() {
-  //       _selectedTemperature = model.selectedDatum.first.datum;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       _selectedTemperature = null;
-  //     });
-  //   }
-  // }
-
   _setGraphDate(Duration beforeEndDate) {
     setState(() {
       _startDate = widget.temperatures.last.time.subtract(beforeEndDate);
