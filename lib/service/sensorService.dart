@@ -6,7 +6,7 @@ import 'package:pooltemp_flutter/service/baseUrl.dart';
 
 class SensorService {
   Future<List<Sensor>> findSensorIds() async {
-    http.Response response = await http.get(BaseUrl.baseURL+"/sensor");
+    http.Response response = await http.get(Uri.parse(BaseUrl.baseURL+"/sensor"));
     List<dynamic> responseList = json.decode(response.body);
 
     return responseList.map((res)=>Sensor.fromJson(res)).toList();

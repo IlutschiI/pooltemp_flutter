@@ -10,20 +10,24 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=3.8.1 <4.0.0"
 
 dependencies:
-  datetime_picker_formfield: ^0.1.7
-  charts_flutter: ^0.6.0
-  font_awesome_flutter: 8.2.0
-  http: ^0.12.0
+  datetime_picker_formfield: ^2.0.1
+  #charts_flutter: ^0.12.0
+  font_awesome_flutter: 10.10.0
+  http: ^1.5.0
   flutter:
     sdk: flutter
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
+  cupertino_icons: ^1.0.8
 
+  charts_common: any
+  intl: any
+  fl_chart: ^1.1.1
+  collection: ^1.19.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

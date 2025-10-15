@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class CustomCard extends StatelessWidget {
   const CustomCard({this.child, this.margin, this.padding});
 
-  final Widget child;
-  final EdgeInsets margin;
-  final EdgeInsets padding;
+  final Widget? child;
+  final EdgeInsets? margin;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {

@@ -1,3 +1,4 @@
+import 'package:fl_chart/src/chart/line_chart/line_chart_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -91,12 +92,12 @@ class _TemperatureCardState extends State<TemperatureCard> {
     );
   }
 
-  Future<List> loadGraphData() async {
+  Future<LineChartData> loadGraphData() async {
     var temperatures = await widget._service.findAllTemperatureForSensor(widget._sensor.id);
     var _startDate = temperatures.last.time.subtract(Duration(days: 3));
     var _endDate = temperatures.last.time;
     DownsizeListWrapper wrapper = DownsizeListWrapper(temperatures, _startDate, _endDate);
     var list = await compute(TemperatureListService.downsizeList, wrapper);
-    return TemperatureSeriesConverter().convert(list);
+    return TemperatureSeriesConverter().convert(list, showXAxis: false,enableTooltips: false);
   }
 }

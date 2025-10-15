@@ -16,8 +16,8 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
-  List<Sensor> _sensors = new List();
-  List<Temperature> _temperatures = new List();
+  List<Sensor> _sensors = [];
+  List<Temperature> _temperatures = [];
   TemperatureService _service = TemperatureService();
 
   bool _isLoading = true;
@@ -46,7 +46,7 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   Future<List<Temperature>> loadTemperatureForSensors() async {
-    List<Temperature> list = List();
+    List<Temperature> list = [];
 
     for (Sensor sensor in _sensors) {
       list.add(await _service.findActualTemperatureForSensor(sensor.id));

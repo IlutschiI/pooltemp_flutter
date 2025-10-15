@@ -5,17 +5,10 @@ class TemperatureListService {
 
   static List<Temperature> downsizeList(DownsizeListWrapper wrapper){
     var list = wrapper.temperatures;
-    if(list==null){
-      return List();
-    }
-    var result = new List<Temperature>();
-    if (wrapper.startDate != null) {
-      list = list.where((t) => t.time.isAfter(wrapper.startDate)).toList();
-    }
-    if (wrapper.endDate != null) {
+    var result = <Temperature>[];
+    list = list.where((t) => t.time.isAfter(wrapper.startDate)).toList();
       list = list.where((t) => t.time.isBefore(wrapper.endDate)).toList();
-    }
-    if (list.length > 1000) {
+      if (list.length > 1000) {
       for (int i = 0; i < list.length; i++) {
         if (i % 100 == 0) {
           result.add(list[i]);

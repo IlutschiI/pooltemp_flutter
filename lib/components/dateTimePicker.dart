@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:pooltemp_flutter/util/dateTimeUtil.dart';
 
 class DateTimePicker extends StatefulWidget {
-  final double height;
-  final double width;
-  final EdgeInsets padding;
-  final EdgeInsets margin;
+  final double? height;
+  final double? width;
+  final EdgeInsets? padding;
+  final EdgeInsets? margin;
   final bool timeEnabled;
-  final ValueChanged<DateTime> onValueChanged;
-  final DateTime value;
+  final ValueChanged<DateTime?>? onValueChanged;
+  final DateTime? value;
 
-  DateTimePicker({this.height, this.width, @required this.value, this.padding, this.margin, this.timeEnabled, this.onValueChanged});
+  DateTimePicker({this.height, this.width, this.value, this.padding, this.margin, this.timeEnabled = true, this.onValueChanged});
 
   @override
   DateTimePickerState createState() {
@@ -20,45 +20,45 @@ class DateTimePicker extends StatefulWidget {
 
 class DateTimePickerState extends State<DateTimePicker> {
   var txt = TextEditingController();
-  DateTime value;
-
+  DateTime? value;
 
   DateTimePickerState(this.value);
 
   @override
   Widget build(BuildContext context) {
-    txt.text = DateTimeUtil.format(widget.value);
+    txt.text = value != null ? DateTimeUtil.format(value!) : "";
 
     return Container(
-        padding: widget.padding ?? EdgeInsets.all(5),
-        margin: widget.margin ?? EdgeInsets.all(0),
-        color: Colors.white,
-        height: widget.height,
-        width: widget.width ?? double.infinity,
-        child: InkWell(
-          child: TextField(
-            controller: txt,
-            enabled: false,
-          ),
-          onTap: () => _showDateTimePicker(context),
-        ));
+      padding: widget.padding ?? EdgeInsets.all(5),
+      margin: widget.margin ?? EdgeInsets.all(0),
+      color: Colors.white,
+      height: widget.height,
+      width: widget.width ?? double.infinity,
+      child: InkWell(
+        child: TextField(controller: txt, enabled: false),
+        onTap: () => _showDateTimePicker(context),
+      ),
+    );
   }
 
   _showDateTimePicker(BuildContext context) {
-    showDatePicker(context: context, initialDate: widget.value, firstDate: DateTime.fromMicrosecondsSinceEpoch(0), lastDate: DateTime.now().add(Duration(days: 1000)))
-        .then((d) => _onDateSelected(d, context));
+    showDatePicker(
+      context: context,
+      initialDate: widget.value,
+      firstDate: DateTime.fromMicrosecondsSinceEpoch(0),
+      lastDate: DateTime.now().add(Duration(days: 1000)),
+    ).then((d) => _onDateSelected(d, context));
   }
 
-  _onDateSelected(DateTime dateTime, BuildContext context) {
+  _onDateSelected(DateTime? dateTime, BuildContext context) {
     if (dateTime == null) {
       return;
     }
     value = dateTime;
-    if (widget.timeEnabled ?? true) {
+    if (widget.timeEnabled) {
       showTimePicker(context: context, initialTime: TimeOfDay(hour: 0, minute: 0)).then(_onTimeSelected);
     } else {
       setState(() {
-
         notifyOnValueChanged();
       });
     }
@@ -66,16 +66,16 @@ class DateTimePickerState extends State<DateTimePicker> {
 
   void notifyOnValueChanged() {
     if (widget.onValueChanged != null) {
-      widget.onValueChanged(value);
+      widget.onValueChanged!(value);
     }
   }
 
-  _onTimeSelected(TimeOfDay time) {
-    if (time == null) {
+  _onTimeSelected(TimeOfDay? time) {
+    if (time == null || value == null) {
       return;
     }
     setState(() {
-      value = DateTime(value.year, value.month, value.day, time.hour, time.minute);
+      value = DateTime(value!.year, value!.month, value!.day, time.hour, time.minute);
       notifyOnValueChanged();
     });
   }

@@ -1,4 +1,4 @@
-import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fl_chart/fl_chart.dart' as charts;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -13,10 +13,10 @@ import 'package:pooltemp_flutter/service/temperatureListService.dart';
 import 'dart:math';
 
 class LineGraphCard extends StatefulWidget {
-  List<Temperature> temperatures = new List();
+  List<Temperature> temperatures;
   bool isZoomable;
 
-  LineGraphCard({this.temperatures, this.isZoomable = false});
+  LineGraphCard({this.temperatures = const [], this.isZoomable = false});
 
   @override
   _LineGraphCardState createState() {
@@ -25,16 +25,16 @@ class LineGraphCard extends StatefulWidget {
 }
 
 class _LineGraphCardState extends State<LineGraphCard> {
-  List<charts.Series<Temperature, DateTime>> _series = new List();
+  charts.LineChartData _series = charts.LineChartData();
   final dateFormat = DateFormat("dd.MM.yyyy");
-  Temperature _selectedTemperature;
-  DateTime _startDate;
-  DateTime _endDate;
+  Temperature? _selectedTemperature;
+  DateTime? _startDate;
+  DateTime? _endDate;
 
   @override
   void initState() {
-    _startDate = widget.temperatures?.first?.time;
-    _endDate = widget.temperatures?.last?.time;
+    _startDate = widget.temperatures.first.time;
+    _endDate = widget.temperatures.last.time;
     updateChart();
   }
 
@@ -68,7 +68,7 @@ class _LineGraphCardState extends State<LineGraphCard> {
                     value: _endDate,
                     onValueChanged: (d) => setState(() {
                           _endDate = d;
-                          _endDate.add(Duration(hours: 23, minutes: 59, seconds: 59));
+                          _endDate?.add(Duration(hours: 23, minutes: 59, seconds: 59));
                           updateChart();
                         }),
                   )),
@@ -133,14 +133,14 @@ class _LineGraphCardState extends State<LineGraphCard> {
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.all(10),
               //maybe replace this Chart with a selfmade widget, which uses this chart
-              child: _series.length != 0 ? buildLineChart() : Container(),
+              child:  buildLineChart(),
             ),
             Container(
               margin: EdgeInsets.only(bottom: 5),
               child: Column(
                 children: <Widget>[
-                  Text((_selectedTemperature != null ? _selectedTemperature.temperature.toString() + "°C" : "")),
-                  Text(_selectedTemperature != null ? DateFormat("d MMMM y HH:mm").format(_selectedTemperature.time) : ""),
+                  Text((_selectedTemperature != null ? _selectedTemperature!.temperature.toString() + "°C" : "")),
+                  Text(_selectedTemperature != null ? DateFormat("d MMMM y HH:mm").format(_selectedTemperature!.time) : ""),
                 ],
               ),
             )
@@ -156,31 +156,31 @@ class _LineGraphCardState extends State<LineGraphCard> {
     if (widget.temperatures != null) maxValue = widget.temperatures.map((t) => t.temperature).reduce(max);
     return LineChart(
       series: _series,
-      onChangeListener: _onSelectionChanged,
+      // onChangeListener: _onSelectionChanged,
       isZoomable: true,
       maxValue: maxValue,
     );
   }
 
   void updateChart() async {
-    DownsizeListWrapper wrapper = DownsizeListWrapper(widget.temperatures, _startDate, _endDate);
+    DownsizeListWrapper wrapper = DownsizeListWrapper(widget.temperatures, _startDate!, _endDate!);
     var list = await compute(TemperatureListService.downsizeList, wrapper);
     setState(() {
       _series = TemperatureSeriesConverter().convert(list);
     });
   }
 
-  _onSelectionChanged(charts.SelectionModel<DateTime> model) {
-    if (model.hasAnySelection) {
-      setState(() {
-        _selectedTemperature = model.selectedDatum.first.datum;
-      });
-    } else {
-      setState(() {
-        _selectedTemperature = null;
-      });
-    }
-  }
+  // _onSelectionChanged(charts.SelectionModel<DateTime> model) {
+  //   if (model.hasAnySelection) {
+  //     setState(() {
+  //       _selectedTemperature = model.selectedDatum.first.datum;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       _selectedTemperature = null;
+  //     });
+  //   }
+  // }
 
   _setGraphDate(Duration beforeEndDate) {
     setState(() {
