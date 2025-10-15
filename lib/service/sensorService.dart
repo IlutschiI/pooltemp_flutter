@@ -11,4 +11,9 @@ class SensorService {
 
     return responseList.map((res)=>Sensor.fromJson(res)).toList();
   }
+
+  Future<Sensor> getSensorById(String sensorId) async {
+    final sensors = await findSensorIds();
+    return sensors.firstWhere((sensor) => sensor.id == sensorId,);
+  }
 }

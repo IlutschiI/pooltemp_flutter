@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pooltemp_flutter/components/card.dart';
 import 'package:pooltemp_flutter/components/lineGraphCard.dart';
 import 'package:pooltemp_flutter/model/temperature.dart';
+import 'package:pooltemp_flutter/service/sensorService.dart';
 import 'package:pooltemp_flutter/service/temperatureService.dart';
 
 class TemperatureDetails extends StatelessWidget {
@@ -14,7 +15,15 @@ class TemperatureDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(_sensorId), centerTitle: true),
+      appBar: AppBar(title: FutureBuilder(
+        future: loadSensorName(),
+        builder: (context, asyncSnapshot) {
+          if(asyncSnapshot.hasData){
+            return Text(asyncSnapshot.requireData);
+          }
+          return Text(_sensorId);
+        }
+      ), centerTitle: true),
       body: SingleChildScrollView(
         padding: EdgeInsets.only(top: 30, bottom: 15),
         child: Column(
@@ -106,5 +115,9 @@ class TemperatureDetails extends StatelessWidget {
 
   Future<Temperature> loadLowestTemperature() async {
     return await TemperatureService().findLowestTemperatureForSensor(_sensorId);
+  }
+
+  Future<String> loadSensorName() async {
+    return (await SensorService().getSensorById(_sensorId)).name;
   }
 }
