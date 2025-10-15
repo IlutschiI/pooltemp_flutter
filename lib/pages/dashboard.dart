@@ -110,7 +110,7 @@ class _DashBoardState extends State<DashBoard> {
 
     if (_hasError) {
       childrens.add(Center(
-        child: Text("a fucking Error occured, please reload..."),
+        child: Text("An Error occured, please reload..."),
       ));
     }
 

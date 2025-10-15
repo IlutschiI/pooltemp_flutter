@@ -8,6 +8,12 @@ import 'package:pooltemp_flutter/util/dateTimeUtil.dart';
 class TemperatureSeriesConverter {
   LineChartData convert(List<Temperature> value, {bool showXAxis = true, bool enableTooltips = true}) {
     final data = LineChartData(
+      borderData: FlBorderData(
+        border: Border(
+          left: BorderSide(style: showXAxis ? BorderStyle.solid : BorderStyle.none),
+          bottom: BorderSide(style: showXAxis ? BorderStyle.solid : BorderStyle.none),
+        ),
+      ),
       lineTouchData: LineTouchData(
         enabled: enableTooltips,
         touchTooltipData: LineTouchTooltipData(
