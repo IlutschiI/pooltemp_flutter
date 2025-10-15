@@ -25,7 +25,9 @@ class TemperatureSeriesConverter {
                 children: [
                   TextSpan(text: "${e.y} °C"),
                   TextSpan(text: "\n"),
-                  TextSpan(text: DateTimeUtil.format(DateTime.fromMillisecondsSinceEpoch(e.x.toInt()))),
+                  TextSpan(
+                    text: DateTimeUtil.format(DateTime.fromMillisecondsSinceEpoch(e.x.toInt()), dateFormat: DateTimeUtil.ddMMyyyyHHmm),
+                  ),
                 ],
               );
             }).toList();
