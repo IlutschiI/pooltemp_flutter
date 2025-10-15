@@ -1,3 +1,3 @@
 abstract class BaseUrl{
-  static const String baseURL="http://lwickenhauser.com";
+  static const String baseURL="https://lwickenhauser.com";
 }
