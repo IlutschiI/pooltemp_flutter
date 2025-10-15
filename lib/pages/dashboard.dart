@@ -22,6 +22,7 @@ class _DashBoardState extends State<DashBoard> {
 
   bool _isLoading = true;
   bool _hasError = false;
+  String errorText = "";
 
   @override
   void initState() {
@@ -41,6 +42,7 @@ class _DashBoardState extends State<DashBoard> {
       setState(() {
         _isLoading = false;
         _hasError = true;
+        errorText = e.toString();
       });
     });
   }
@@ -110,7 +112,7 @@ class _DashBoardState extends State<DashBoard> {
 
     if (_hasError) {
       childrens.add(Center(
-        child: Text("An Error occured, please reload..."),
+        child: Text("An Error occured, please reload...\n$errorText"),
       ));
     }
 
